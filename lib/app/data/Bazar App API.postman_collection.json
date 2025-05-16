@@ -1,0 +1,813 @@
+{
+	"info": {
+		"_postman_id": "5d7efa1c-c5a7-4a1d-a4b5-d6f359169bb2",
+		"name": "Bazar App API",
+		"description": "Complete API collection for Cars Marketplace",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33099026",
+		"_collection_link": "https://webburger.postman.co/workspace/Bazar-Project~49850ef9-681d-468a-aab7-d0eac9582fa8/collection/19728484-5d7efa1c-c5a7-4a1d-a4b5-d6f359169bb2?action=share&source=collection_link&creator=33099026"
+	},
+	"item": [
+		{
+			"name": "Public Routes",
+			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "Register User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Amr Hajjouz\",\r\n    \"email\":\"amr.hajjouz@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"phone\":\"00905488483843\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Authenticate User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\":\"amr.hajjouz@gmail.com\",\r\n    \"password\":\"12345678\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users/authenticate",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"authenticate"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Utilities",
+					"item": [
+						{
+							"name": "List Utilities",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/utilities",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"utilities"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Contents",
+					"item": [
+						{
+							"name": "List Contents",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/contents",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"contents"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Advertisements",
+					"item": [
+						{
+							"name": "List Advertisements",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/advertisements?query=سيارة ريو",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"advertisements"
+									],
+									"query": [
+										{
+											"key": "query",
+											"value": "سيارة ريو"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrieve Advertisements",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/advertisements/30",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"advertisements",
+										"30"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Protected Routes",
+			"item": [
+				{
+					"name": "Authenticated User",
+					"item": [
+						{
+							"name": "Logout Auth User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{}
+								],
+								"url": {
+									"raw": "{{base_url}}/auth/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Auth User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Amr Hajjouz",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "email",
+											"value": "amr.hajjouz@gmail.com",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "phone",
+											"value": "+905488483843",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "profile_image",
+											"type": "file",
+											"src": "postman-cloud:///1f0190fc-7e6f-4050-9a9f-d063a072c908"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/auth",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrieve Auth User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{}
+								],
+								"url": {
+									"raw": "{{base_url}}/auth",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Auth Advertisements",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{}
+								],
+								"url": {
+									"raw": "{{base_url}}/auth/advertisements",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"advertisements"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Auth Favorited Advertisements",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{}
+								],
+								"url": {
+									"raw": "{{base_url}}/auth/favorites",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"favorites"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Advertisements",
+					"item": [
+						{
+							"name": "Create Advertisement",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "سيارة كيار ريو في حالة جيدة",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "سيارة كيا ريو لون أبيض بحالة ممتازة في محافظة اللاذقية",
+											"type": "text"
+										},
+										{
+											"key": "model_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "5000",
+											"description": "in $, Min: $ 1",
+											"type": "text"
+										},
+										{
+											"key": "year",
+											"value": "2010",
+											"description": "Motor model year",
+											"type": "text"
+										},
+										{
+											"key": "mileage",
+											"value": "200000",
+											"description": "Mileage in Kilometers",
+											"type": "text"
+										},
+										{
+											"key": "condition",
+											"value": "used",
+											"description": "Used or New",
+											"type": "text"
+										},
+										{
+											"key": "transmission",
+											"value": "automatic",
+											"description": "Automatic or Manual",
+											"type": "text"
+										},
+										{
+											"key": "fuel_type",
+											"value": "petrol",
+											"description": "Petrol, Diesel, Electric, or Hybrid",
+											"type": "text"
+										},
+										{
+											"key": "body_type",
+											"value": "sedna",
+											"description": "null or one of the following: 'SUV', 'coupe', 'sedan', 'crossover', 'hard_top_convertible', 'pickup_truck', 'hatchback',  'soft_top_convertible', 'sports_car', 'van', 'wagon', 'utility_truck'",
+											"type": "text"
+										},
+										{
+											"key": "seats",
+											"value": "4",
+											"description": "null or one of the following: '2', '3', '4', '5', '6', '7', '8', '+8'",
+											"type": "text"
+										},
+										{
+											"key": "doors",
+											"value": "4",
+											"description": "null or one of the following: '2', '4', '5', '+5'",
+											"type": "text"
+										},
+										{
+											"key": "interior_color",
+											"value": "grey",
+											"description": "null or one of the following: 'beige', 'black', 'blue', 'brown', 'green', 'grey', 'orange', 'red', 'tan', 'white', 'yellow', use the list of the exterior colors in Utilities",
+											"type": "text"
+										},
+										{
+											"key": "exterior_color",
+											"value": "black",
+											"description": "null or: 'black', 'blue', 'brown', 'burgundy', 'gold', 'grey', 'orange', 'green', 'purple', 'red', 'silver', 'beige', 'tan', 'teal', 'white', 'yellow', use the list of the exterior colors in Utilities",
+											"type": "text"
+										},
+										{
+											"key": "address",
+											"value": "Jablah",
+											"type": "text"
+										},
+										{
+											"key": "images[]",
+											"type": "file",
+											"src": [
+												"postman-cloud:///1f01cf5e-7413-4160-804e-5686018eff7b",
+												"postman-cloud:///1f01cf5e-899b-4c80-ad39-07cb200f97a6"
+											]
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/advertisements",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"advertisements"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Advertisement",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "سيارة كيار ريو في حالة جيدة",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "سيارة كيا ريو لون أبيض بحالة ممتازة في محافظة اللاذقية",
+											"type": "text"
+										},
+										{
+											"key": "model_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "5000",
+											"description": "in $, Min: $ 1",
+											"type": "text"
+										},
+										{
+											"key": "year",
+											"value": "2010",
+											"description": "Motor model year",
+											"type": "text"
+										},
+										{
+											"key": "mileage",
+											"value": "200000",
+											"description": "Mileage in Kilometers",
+											"type": "text"
+										},
+										{
+											"key": "condition",
+											"value": "used",
+											"description": "Used or New",
+											"type": "text"
+										},
+										{
+											"key": "transmission",
+											"value": "automatic",
+											"description": "Automatic or Manual",
+											"type": "text"
+										},
+										{
+											"key": "fuel_type",
+											"value": "petrol",
+											"description": "Petrol, Diesel, Electric, or Hybrid",
+											"type": "text"
+										},
+										{
+											"key": "color",
+											"value": "grey",
+											"type": "text"
+										},
+										{
+											"key": "location",
+											"value": "Jablah",
+											"type": "text"
+										},
+										{
+											"key": "new_images[]",
+											"type": "file",
+											"src": [
+												"postman-cloud:///1f01cf5e-7413-4160-804e-5686018eff7b",
+												"postman-cloud:///1f01cf5e-899b-4c80-ad39-07cb200f97a6"
+											],
+											"disabled": true
+										},
+										{
+											"key": "removed_images[]",
+											"value": "[]",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/advertisements/33",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"advertisements",
+										"33"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Advertisement",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/advertisements/33",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"advertisements",
+										"33"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Favorite Advertisement",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/advertisements/33/favorite",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"advertisements",
+										"33",
+										"favorite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Report Advertisement",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reason",
+											"value": "fraud",
+											"description": "'spam','fraud','inappropriate','wrong_info','other'",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "اعلان للاحتيال لا يوجد سيارة بمثل هذه المواصفات",
+											"description": "nullable",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/advertisements/33/report",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"advertisements",
+										"33",
+										"report"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Report Advertisement Copy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reason",
+											"value": "fraud",
+											"description": "'spam','fraud','inappropriate','wrong_info','other'",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "اعلان للاحتيال لا يوجد سيارة بمثل هذه المواصفات",
+											"description": "nullable",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/advertisements/33/report",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"advertisements",
+										"33",
+										"report"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unavorite Advertisement",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/advertisements/33/unfavorite",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"advertisements",
+										"33",
+										"unfavorite"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Images",
+					"item": [
+						{
+							"name": "Upload Images",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://bazar-dev.amrhajjouz.com/api"
+		},
+		{
+			"key": "token",
+			"value": "48|GFdkcaNo8VxZt8lwhxXL2F0UADBmtkhp7Z7y5OYm0b7465d8",
+			"type": "string"
+		}
+	]
+}

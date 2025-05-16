@@ -1,0 +1,2 @@
+E:/My Flutter Projects/pazar_app/pazar/android/app/.cxx/Debug/1xv7232k/x86_64/CMakeFiles/edit_cache.dir
+E:/My Flutter Projects/pazar_app/pazar/android/app/.cxx/Debug/1xv7232k/x86_64/CMakeFiles/rebuild_cache.dir
