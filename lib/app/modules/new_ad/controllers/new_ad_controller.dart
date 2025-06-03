@@ -9,7 +9,6 @@ import 'package:pazar/app/data/models/utilities_models.dart';
 import 'package:pazar/app/modules/car_details/controllers/car_details_controller.dart';
 import 'package:pazar/app/modules/my_ads/controllers/my_ads_controller.dart';
 import 'package:pazar/app/modules/new_ad/controllers/edit_ad_images_controller.dart';
-import 'package:pazar/app/routes/app_pages.dart';
 import 'package:pazar/app/shared/utils/error_handler.dart';
 import 'package:pazar/app/shared/utils/toast_loading.dart';
 
@@ -25,6 +24,7 @@ class NewAdController extends GetxController {
   String? selectedBodyType;
   String? selectedInteriorColor;
   String? selectedExteriorColor;
+  String? selectedRegionalSpecs;
   String? selectedCarStatus;
   String? selectedProvinc;
 
@@ -108,6 +108,12 @@ class NewAdController extends GetxController {
           // orElse: () => ,
         )
         .name['ar'];
+    selectedRegionalSpecs = utilitiesService.regionalSpecs
+        .firstWhere(
+          (element) => element.key == ad.regionalSpecs,
+          // orElse: () => ,
+        )
+        .label['ar'];
     selectedCarStatus = ad.getConditions(ad.condition)?.ar;
     selectedProvinc = utilitiesService.provinces
         .firstWhere(
@@ -164,6 +170,7 @@ class NewAdController extends GetxController {
       selectedBodyType: selectedBodyType,
       selectedInteriorColor: selectedInteriorColor,
       selectedExteriorColor: selectedExteriorColor,
+      selectedRegionalSpecs: selectedRegionalSpecs,
       selectedCarStatus: selectedCarStatus,
       selectedProvinc: selectedProvinc,
       numberOfSelectedImages: imageFiles.length,
@@ -219,6 +226,10 @@ class NewAdController extends GetxController {
       'exterior_color': utilitiesService.exteriorColors
           .firstWhere((e) => e.name['ar'] == selectedExteriorColor)
           .key, // selectedExteriorColor ?? '',
+
+      'regional_specs': utilitiesService.regionalSpecs
+          .firstWhere((e) => e.label['ar'] == selectedRegionalSpecs)
+          .key, // selectedRegionalSpecs ?? '',
 
       'province': utilitiesService.provinces
           .firstWhere((e) => e.name['ar'] == selectedProvinc)
@@ -307,6 +318,7 @@ class NewAdController extends GetxController {
       selectedBodyType: selectedBodyType,
       selectedInteriorColor: selectedInteriorColor,
       selectedExteriorColor: selectedExteriorColor,
+      selectedRegionalSpecs: selectedRegionalSpecs,
       selectedCarStatus: selectedCarStatus,
       selectedProvinc: selectedProvinc,
       numberOfSelectedImages: imageMedia.length,
@@ -351,6 +363,7 @@ class NewAdController extends GetxController {
       'doors': doorsController.text,
       'interior_color': selectedInteriorColor ?? '',
       'exterior_color': selectedExteriorColor ?? '',
+      'regional_specs': selectedRegionalSpecs ?? '',
       'address': addressController.text,
       'make_id': selectedMakeID,
       'model_id': selectedModelID,
@@ -520,6 +533,7 @@ class NewAdController extends GetxController {
     required String? selectedBodyType,
     required String? selectedInteriorColor,
     required String? selectedExteriorColor,
+    required String? selectedRegionalSpecs,
     required String? selectedCarStatus,
     required String? selectedProvinc,
     required int? numberOfSelectedImages,
@@ -534,6 +548,7 @@ class NewAdController extends GetxController {
       'نوع الهيكل': selectedBodyType,
       'اللون الداخلي': selectedInteriorColor,
       'اللون الخارجي': selectedExteriorColor,
+      'المواصفات الإقليمية': selectedRegionalSpecs,
       'حالة السيارة': selectedCarStatus,
       'المحافظة': selectedProvinc,
     };
@@ -547,9 +562,9 @@ class NewAdController extends GetxController {
       }
     }
 
-    // if (numberOfSelectedImages == null || numberOfSelectedImages < 3) {
-    //   return 'الرجاء رفع 3 صور على الأقل.';
-    // }
+    if (numberOfSelectedImages == null || numberOfSelectedImages < 5) {
+      return 'الرجاء رفع 5 صور على الأقل.';
+    }
 
     // Special case for model ID
     if (selectedModelID == null || selectedModelID.trim().isEmpty) {

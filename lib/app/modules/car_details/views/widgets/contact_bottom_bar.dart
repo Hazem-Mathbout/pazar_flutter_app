@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:name_avatar/name_avatar.dart';
 import 'package:pazar/app/core/values/colors.dart';
 import 'package:pazar/app/data/models/advertisement_model.dart';
 import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
+import 'package:pazar/app/modules/car_details/controllers/car_details_controller.dart';
 import 'package:pazar/app/modules/new_ad/views/new_ad_screen.dart';
-import 'package:pazar/app/routes/app_pages.dart';
+import 'package:pazar/app/shared/utils/open_whatsapp_to_help.dart';
 
 class ContactBottomBar extends StatelessWidget {
   final Seller seller;
   final Advertisement carInfo;
   // final bool showEditButton; // New parameter to show or hide the Edit button
   final authController = Get.find<AuthController>();
+  final carDetailsController = Get.find<CarDetailsController>();
 
   ContactBottomBar({
     super.key,
@@ -21,9 +25,10 @@ class ContactBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(authController.userModel.value);
+    final sellerName = seller.name;
+    final profileImageUrl = seller.profileImageUrl;
     // print(authController.userModel.value?.id);
-    // print(seller.id);
+    // print(seller.profileImageUrl);
     // Using SafeArea to avoid intrusions like the home indicator
     return SafeArea(
       child: Container(
@@ -49,15 +54,18 @@ class ContactBottomBar extends StatelessWidget {
             // Right side: Seller Name and Avatar
             Row(
               children: [
-                CircleAvatar(
-                  radius: 28, // Half of the container height
-                  backgroundImage: NetworkImage(seller.profileImageUrl ?? ''),
-                  onBackgroundImageError: (exception, stackTrace) {
-                    // Handle image loading errors, e.g., show a placeholder
-                    print('Error loading image: $exception');
-                  },
-                  backgroundColor: Colors.grey[200], // Placeholder color
-                ),
+                profileImageUrl != null && profileImageUrl.isNotEmpty
+                    ? CircleAvatar(
+                        radius: 28,
+                        backgroundImage: NetworkImage(profileImageUrl),
+                        backgroundColor: Colors.grey[200],
+                      )
+                    : NameAvatar(
+                        name: sellerName,
+                        radius: 28,
+                        isTwoChar: true,
+                        // textStyle: const TextStyle(fontSize: 16),
+                      ),
                 const SizedBox(width: 12),
                 Text(
                   seller.name,
@@ -112,17 +120,17 @@ class ContactBottomBar extends StatelessWidget {
                 : Row(
                     children: [
                       // Chat Button
-                      IconButton(
-                        icon: const Icon(Icons.chat_bubble_outline,
-                            color: Colors.black54, size: 24),
-                        onPressed: () {
-                          Get.toNamed(Routes.CONVERSATION, arguments: {
-                            'seller': seller,
-                            'carInfo': carInfo,
-                          });
-                        },
-                      ),
-                      const SizedBox(width: 8),
+                      // IconButton(
+                      //   icon: const Icon(Icons.chat_bubble_outline,
+                      //       color: Colors.black54, size: 24),
+                      //   onPressed: () {
+                      //     Get.toNamed(Routes.CONVERSATION, arguments: {
+                      //       'seller': seller,
+                      //       'carInfo': carInfo,
+                      //     });
+                      //   },
+                      // ),
+                      // const SizedBox(width: 8),
                       // Phone Button
                       Container(
                         width: 56, // Diameter of the circle
@@ -132,11 +140,16 @@ class ContactBottomBar extends StatelessWidget {
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon: const Icon(Icons.phone,
-                              color: Colors.white, size: 28),
+                          icon: const FaIcon(
+                            FontAwesomeIcons.whatsapp,
+                            color: Colors.white,
+                            size: 30,
+                          ),
                           onPressed: () {
-                            // TODO: Implement phone call action later
-                            print("Phone button tapped");
+                            openWhatsApp(
+                              phoneNumber: seller.whatsappNumber,
+                              message: 'مرحباً، أرغب في الاستفسار عن الإعلان.',
+                            );
                           },
                         ),
                       ),

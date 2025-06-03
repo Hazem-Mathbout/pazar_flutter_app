@@ -100,28 +100,27 @@ class CarCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Obx(() {
-                          final isFavorite =
-                              controller.isFavorite(advertisement);
-                          return SizedBox(
+                        GetBuilder<AdvertisementController>(
+                          id: advertisement.id.toString(),
+                          builder: (controller) => SizedBox(
                             width: 20,
                             height: 20,
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               // alignment: Alignment.centerRight,
                               icon: Icon(
-                                isFavorite
+                                advertisement.favoritedByAuth
                                     ? Icons.favorite
                                     : Icons.favorite_border,
-                                color: isFavorite
+                                color: advertisement.favoritedByAuth
                                     ? Colors.red
                                     : AppColors.foregroundSecondary,
                               ),
                               onPressed: () async => await controller
                                   .toggleFavorite(advertisement),
                             ),
-                          );
-                        }),
+                          ),
+                        ),
                         SizedBox(
                           width: 25,
                           height: 25,

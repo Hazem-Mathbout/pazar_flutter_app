@@ -223,6 +223,18 @@ class NewAdScreen extends StatelessWidget {
                       },
                       initialValue: controller.selectedExteriorColor,
                     ),
+                    const SizedBox(height: 16),
+                    CustomSearchableDropdown<String>(
+                      info: 'المواصفات الإقليمية',
+                      items: utilitiesService.regionalSpecs
+                          .map((e) => e.label['ar'] ?? '')
+                          .toList(),
+                      itemAsString: (item) => item,
+                      onChanged: (value) {
+                        controller.selectedRegionalSpecs = value;
+                      },
+                      initialValue: controller.selectedRegionalSpecs,
+                    ),
                   ],
                 ),
               ),

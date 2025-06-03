@@ -12,6 +12,7 @@ class UtilitiesService extends GetxService {
   List<ColorItem> exteriorColors = [];
   List<BodyType> bodyTypes = [];
   List<Province> provinces = [];
+  List<RegionalSpecs> regionalSpecs = [];
 
   List<PageItem> pages = [];
 
@@ -44,6 +45,9 @@ class UtilitiesService extends GetxService {
 
         provinces = List<Province>.from(
             data['provinces'].map((e) => Province.fromJson(e)));
+
+        regionalSpecs = List<RegionalSpecs>.from(
+            data['regional_specs'].map((e) => RegionalSpecs.fromJson(e)));
 
         print('Utilities loaded in service ✅');
       } else {

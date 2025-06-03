@@ -162,7 +162,10 @@
 //   ),
 // ];
 
+import 'dart:developer';
+
 import 'package:pazar/app/data/models/utilities_models.dart';
+import 'package:pazar/app/shared/utils/validate_json_types.dart';
 
 class Advertisement {
   final int id;
@@ -181,14 +184,19 @@ class Advertisement {
   final String? interiorColor;
   final String? exteriorColor;
   final String address;
-  final String province;
+  final String? province;
   String status;
   final int viewsCount;
   final Seller seller;
   final Make make;
   final Make model;
+  final LocalizedText modelFullName;
+
+  ///the key of the Regional Specs, and then fetch the label from the util.
+  final String? regionalSpecs;
   final List<ImageMedia> media;
   final MetaLabels? metaLabels;
+  bool favoritedByAuth;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -215,19 +223,55 @@ class Advertisement {
     required this.seller,
     required this.make,
     required this.model,
+    required this.modelFullName,
     required this.media,
+    required this.favoritedByAuth,
     this.metaLabels,
+    this.regionalSpecs,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  // Factory method to parse the JSON response into an Advertisement object
   factory Advertisement.fromJson(Map<String, dynamic> json) {
-    // Debug print: print all keys with their value types
+    // factory Advertisement.fromJson(Map<String, dynamic> json) {
     // json.forEach((key, value) {
-    //   print('Key: $key, Type: ${value.runtimeType}, Value: $value');
+    //   log("Key: $key, Type: ${value.runtimeType}, Value: $value");
     // });
 
+    // // Define expected types
+    // final expectedTypes = {
+    //   'id': int,
+    //   'reference': String,
+    //   'title': String,
+    //   'description': String,
+    //   'price': String,
+    //   'year': int,
+    //   'mileage': String,
+    //   'condition': String,
+    //   'transmission': String,
+    //   'fuel_type': String,
+    //   'body_type': String,
+    //   'seats': String,
+    //   'doors': String,
+    //   'interior_color': String,
+    //   'exterior_color': String,
+    //   'address': String,
+    //   'province': String,
+    //   'status': String,
+    //   'views_count': int,
+    //   'seller': Map<String, dynamic>,
+    //   'make': Map<String, dynamic>,
+    //   'model': Map<String, dynamic>,
+    //   'images': List,
+    //   'meta_labels': Map<String, dynamic>,
+    //   'created_at': String,
+    //   'updated_at': String,
+    // };
+
+    // // Validate JSON types (for debug)
+    // validateJsonTypes(expectedTypes, json);
+
+    // Proceed with parsing
     return Advertisement(
       id: json['id'],
       reference: json['reference'],
@@ -252,12 +296,15 @@ class Advertisement {
       make: json['make'] != null ? Make.fromJson(json['make']) : Make.empty(),
       model:
           json['model'] != null ? Make.fromJson(json['model']) : Make.empty(),
+      modelFullName: LocalizedText.fromJson(json['model_fullname']),
       media: (json['images'] as List<dynamic>? ?? [])
           .map((img) => ImageMedia.fromJson(img))
           .toList(),
       metaLabels: json['meta_labels'] != null
           ? MetaLabels.fromJson(json['meta_labels'])
           : null,
+      regionalSpecs: json['regional_specs'],
+      favoritedByAuth: json['favorited_by_auth'] ?? false,
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
@@ -288,8 +335,10 @@ class Advertisement {
       'seller': seller.toJson(),
       'make': make.toJson(),
       'model': model.toJson(),
+      'model_fullname': modelFullName.toJson(),
       'images': media.map((m) => m.toJson()).toList(),
       'meta_labels': metaLabels?.toJson(),
+      'regional_specs': regionalSpecs,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -320,33 +369,39 @@ class Advertisement {
 class Seller {
   final int id;
   final String name;
-  final String? whatsappNumber;
+  final String whatsappNumber;
   final String? profileImageUrl;
+  final bool businessAccount;
+  final bool verified;
 
   Seller({
     required this.id,
     required this.name,
     required this.whatsappNumber,
-    required this.profileImageUrl,
+    this.profileImageUrl,
+    required this.businessAccount,
+    required this.verified,
   });
 
-  // Factory method to parse the JSON response into a Seller object
   factory Seller.fromJson(Map<String, dynamic> json) {
     return Seller(
       id: json['id'],
       name: json['name'],
       whatsappNumber: json['whatsapp_number'],
       profileImageUrl: json['profile_image_url'],
+      businessAccount: json['business_account'] ?? false,
+      verified: json['verified'] ?? false,
     );
   }
 
-  // Method to convert Seller object to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'whatsapp_number': whatsappNumber,
       'profile_image_url': profileImageUrl,
+      'business_account': businessAccount,
+      'verified': verified,
     };
   }
 }
@@ -385,6 +440,7 @@ class MetaLabels {
   final int? year;
   final LocalizedText? condition;
   final LocalizedText? transmission;
+  final LocalizedText? fuelType;
 
   MetaLabels({
     this.location,
@@ -392,6 +448,7 @@ class MetaLabels {
     this.year,
     this.condition,
     this.transmission,
+    this.fuelType,
   });
 
   factory MetaLabels.fromJson(Map<String, dynamic> json) {
@@ -407,6 +464,9 @@ class MetaLabels {
       transmission: json['transmission'] != null
           ? LocalizedText.fromJson(json['transmission'])
           : null,
+      fuelType: json['fuel_type'] != null
+          ? LocalizedText.fromJson(json['fuel_type'])
+          : null,
     );
   }
 
@@ -417,6 +477,7 @@ class MetaLabels {
       'year': year,
       'condition': condition?.toJson(),
       'transmission': transmission?.toJson(),
+      'fuel_type': fuelType?.toJson(),
     };
   }
 }

@@ -147,3 +147,29 @@ class PageItem {
     );
   }
 }
+
+class RegionalSpecs {
+  final String key;
+  final Map<String, String> label;
+
+  RegionalSpecs({
+    required this.key,
+    required this.label,
+  });
+
+  factory RegionalSpecs.fromJson(Map<String, dynamic> json) {
+    return RegionalSpecs(
+      key: json['key'] ?? '',
+      label: Map<String, String>.from(json['label'] ?? {}),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is RegionalSpecs && other.key == key;
+  }
+
+  @override
+  int get hashCode => key.hashCode;
+}

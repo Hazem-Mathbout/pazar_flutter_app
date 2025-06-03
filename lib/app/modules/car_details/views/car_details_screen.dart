@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pazar/app/core/utilities_service.dart';
@@ -10,7 +9,7 @@ import 'package:pazar/app/modules/home/controllers/advertisement_controller.dart
 import 'package:pazar/app/modules/home/views/widgets/show_report_dialog.dart';
 import 'widgets/detail_table.dart';
 import 'widgets/icon_text_pair.dart';
-import 'widgets/suggestion_cars.dart';
+import 'widgets/image_carousel_viewer.dart';
 
 class CarDetailsScreen extends StatelessWidget {
   CarDetailsScreen({super.key});
@@ -36,103 +35,22 @@ class CarDetailsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildImageCarousel(controller),
+                ImageCarouselViewer(
+                  media: controller.carInfo.value!.media,
+                  currentIndex: controller.currentIndex.value,
+                  onIndexChanged: controller.updateImageIndex,
+                ),
                 _buildHeader(car),
                 _buildDescription(car.description),
                 _buildDetailSection("عن السيارة", controller.carDetails),
                 _buildDetailSection("الميزات", controller.carFeatures),
+                _buildDetailSection("عن الإعلان", controller.aboutAd),
                 _buildSimilarCars(),
               ],
             ),
           ),
         );
       }),
-    );
-  }
-
-  Widget _buildImageCarousel(CarDetailsController controller) {
-    final car = controller.carInfo.value!;
-    final media = car.media;
-    return Stack(
-      children: [
-        SizedBox(
-          height: 294,
-          child: ClipRRect(
-            child: CarouselSlider(
-              options: CarouselOptions(
-                height: 294,
-                viewportFraction: 1,
-                onPageChanged: (index, _) => controller.updateImageIndex(index),
-              ),
-              items: media.map((img) {
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(16)),
-                    image: DecorationImage(
-                        image: NetworkImage(img.url), fit: BoxFit.cover),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 16,
-          right: 16,
-          child: Obx(
-            () => _buildImageIndicator(
-                media.length, controller.currentIndex.value),
-          ),
-        ),
-        Positioned(
-          top: kToolbarHeight,
-          right: 16,
-          child: _buildBackButton(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildImageIndicator(int total, int currentIndex) {
-    return Container(
-      constraints: const BoxConstraints(minWidth: 52), // optional
-      height: 28,
-      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
-      decoration: BoxDecoration(
-        color: const Color(0x7A000000),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Center(
-        child: Text(
-          "${currentIndex + 1}/$total",
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-            fontFamily: "Rubik",
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBackButton() {
-    return InkWell(
-      onTap: () => Get.back(),
-      child: Container(
-        width: 32,
-        height: 32,
-        decoration:
-            const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-        child: Center(
-          child: Transform.translate(
-            offset: const Offset(-3, 0),
-            child: const Icon(Icons.arrow_back_ios,
-                color: AppColors.foregroundSecondary, size: 20),
-          ),
-        ),
-      ),
     );
   }
 
@@ -165,22 +83,24 @@ class CarDetailsScreen extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8.0, left: 8.0),
               child: Row(
                 children: [
-                  Obx(() {
-                    final isFavorite = advertisementController.isFavorite(car);
-                    return Container(
-                      width: 40,
-                      height: 40,
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey
-                            .shade200, // You can customize the background color
-                      ),
-                      child: IconButton(
+                  Container(
+                    width: 40,
+                    height: 40,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey
+                          .shade200, // You can customize the background color
+                    ),
+                    child: GetBuilder<AdvertisementController>(
+                      id: car.id.toString(),
+                      builder: (controller) => IconButton(
                         padding: EdgeInsets.zero,
                         icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite
+                          car.favoritedByAuth
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: car.favoritedByAuth
                               ? Colors.red
                               : AppColors.foregroundSecondary,
                           size: 25,
@@ -188,8 +108,8 @@ class CarDetailsScreen extends StatelessWidget {
                         onPressed: () async =>
                             await advertisementController.toggleFavorite(car),
                       ),
-                    );
-                  }),
+                    ),
+                  ),
                   Container(
                     width: 40,
                     height: 40,

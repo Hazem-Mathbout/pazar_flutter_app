@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pazar/app/core/utilities_service.dart';
 import 'package:pazar/app/data/models/advertisement_model.dart';
 import 'package:pazar/app/data/models/utilities_models.dart';
@@ -53,6 +54,12 @@ class CarDetailsController extends GetxController {
       "عدد المقاعد": car.seats?.toString() ?? "غير محدد",
       "عدد الأبواب": car.doors,
       "الحالة": car.condition == 'new' ? 'جديد' : 'مستعمل',
+      "المواصفات الإقليمية": utilitiesService.regionalSpecs
+              .firstWhere(
+                (element) => element.key == car.regionalSpecs,
+              )
+              .label['ar'] ??
+          'غير محدد',
     };
   }
 
@@ -74,9 +81,24 @@ class CarDetailsController extends GetxController {
               )
               .name['ar'] ??
           'غير محدد',
-      "العنوان": car.metaLabels!.location!.ar,
-      "الحالة": car.status,
+
+      // "العنوان": car.metaLabels!.location!.ar,
+      // "الحالة": car.status,
       // "المشاهدات": car.viewsCount.toString(),
+    };
+  }
+
+  Map<String, String> get aboutAd {
+    final ad = carInfo.value;
+    if (ad == null) return {};
+    return {
+      "رقم الإعلان": ad.id.toString(),
+      "الوضع الحالي": ad.status,
+      "تاريخ النشر": DateFormat('yyyy-MM-dd').format(ad.createdAt),
+      "العنوان الكامل": ad.address,
+      "اسم البائع": ad.seller.name,
+      "نوع الحساب":
+          "${ad.seller.businessAccount ? "حساب تجاري" : "حساب شخصي"} ${ad.seller.verified ? "✅ موثق" : "❌ غير موثق"}",
     };
   }
 }

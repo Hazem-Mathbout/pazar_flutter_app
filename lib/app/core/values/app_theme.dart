@@ -12,7 +12,9 @@ class AppTheme {
 
       // AppBar
       appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
+        backgroundColor:
+            Theme.of(context).appBarTheme.backgroundColor ?? Colors.red,
         foregroundColor: AppColors.foregroundPrimary,
         elevation: 1,
         iconTheme: IconThemeData(color: AppColors.foregroundSecondary),
@@ -48,9 +50,7 @@ class AppTheme {
           fontWeight: FontWeight.bold,
           color: AppColors.foregroundPrimary,
         ),
-        labelLarge: TextStyle(
-          color: AppColors.primaryRed,
-        ),
+        labelLarge: TextStyle(color: AppColors.primaryRed),
       ),
 
       // TextField / Input

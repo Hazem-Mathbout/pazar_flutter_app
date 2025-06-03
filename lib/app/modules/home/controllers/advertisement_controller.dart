@@ -150,9 +150,10 @@ class AdvertisementController extends GetxController {
     }
   }
 
-  final RxList<int> _favoriteIds = <int>[].obs;
+  // final RxList<int> _favoriteIds = <int>[].obs;
 
-  bool isFavorite(Advertisement ad) => _favoriteIds.contains(ad.id);
+  // bool isFavorite(Advertisement ad) => _favoriteIds.contains(ad.id);
+  bool isFavorite(Advertisement ad) => ad.favoritedByAuth;
 
   Future<void> toggleFavorite(Advertisement ad) async {
     final favController = Get.find<FavoritesController>();
@@ -160,10 +161,13 @@ class AdvertisementController extends GetxController {
 
     // Optimistic update
     if (wasFavorite) {
-      _favoriteIds.remove(ad.id);
+      // _favoriteIds.remove(ad.id);
+      ad.favoritedByAuth = false;
     } else {
-      _favoriteIds.add(ad.id);
+      // _favoriteIds.add(ad.id);
+      ad.favoritedByAuth = true;
     }
+    update([ad.id.toString()]);
 
     // Call correct backend method
     final isDone = wasFavorite
@@ -171,7 +175,7 @@ class AdvertisementController extends GetxController {
         : await backendFavoriteAd(ad.id);
 
     if (isDone) {
-      _updateLocalFavorites(ad.id, !wasFavorite);
+      // _updateLocalFavorites(ad.id, !wasFavorite);
 
       final oldPages = favController.pagingController.pages ?? [];
       final newPages = List<List<Advertisement>>.from(
@@ -211,9 +215,11 @@ class AdvertisementController extends GetxController {
     } else {
       // Revert optimistic update
       if (wasFavorite) {
-        _favoriteIds.add(ad.id);
+        // _favoriteIds.add(ad.id);
+        ad.favoritedByAuth = true;
       } else {
-        _favoriteIds.remove(ad.id);
+        // _favoriteIds.remove(ad.id);
+        ad.favoritedByAuth = false;
       }
 
       Get.snackbar(
@@ -223,34 +229,35 @@ class AdvertisementController extends GetxController {
         colorText: Colors.white,
       );
     }
+    update(['favorite']);
   }
 
-  void _updateLocalFavorites(int adId, bool add) {
-    final prefs = utilityServices.prefs;
-    final prefsFavoriteIds = prefs.getStringList('favoriteIds') ?? [];
+  // void _updateLocalFavorites(int adId, bool add) {
+  //   final prefs = utilityServices.prefs;
+  //   final prefsFavoriteIds = prefs.getStringList('favoriteIds') ?? [];
 
-    final adIdStr = adId.toString();
-    if (add) {
-      if (!prefsFavoriteIds.contains(adIdStr)) {
-        prefsFavoriteIds.add(adIdStr);
-      }
-    } else {
-      prefsFavoriteIds.remove(adIdStr);
-    }
+  //   final adIdStr = adId.toString();
+  //   if (add) {
+  //     if (!prefsFavoriteIds.contains(adIdStr)) {
+  //       prefsFavoriteIds.add(adIdStr);
+  //     }
+  //   } else {
+  //     prefsFavoriteIds.remove(adIdStr);
+  //   }
 
-    prefs.setStringList('favoriteIds', prefsFavoriteIds);
-  }
+  //   prefs.setStringList('favoriteIds', prefsFavoriteIds);
+  // }
 
   @override
   void onInit() {
     pagingController.addListener(_showError);
-    var prefs = utilityServices.prefs;
-    List<String> stringIds = prefs.getStringList('favoriteIds') ?? [];
-    List<int> favoriteIds = stringIds
-        .where((id) => int.tryParse(id) != null)
-        .map((id) => int.parse(id))
-        .toList();
-    _favoriteIds.value = favoriteIds;
+    // var prefs = utilityServices.prefs;
+    // List<String> stringIds = prefs.getStringList('favoriteIds') ?? [];
+    // List<int> favoriteIds = stringIds
+    //     .where((id) => int.tryParse(id) != null)
+    //     .map((id) => int.parse(id))
+    //     .toList();
+    // _favoriteIds.value = favoriteIds;
 
     super.onInit();
   }

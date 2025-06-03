@@ -7,9 +7,10 @@ import 'package:pazar/splash_screen.dart';
 // import 'package:pazar/splash_screen.dart';
 import 'app/core/utilities_service.dart';
 import 'app/routes/app_pages.dart'; // Import GetX app pages
+import 'package:flutter/services.dart';
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
@@ -39,6 +40,15 @@ class _PreAppState extends State<PreApp> {
   }
 
   Future<void> initializeApp() async {
+    // Set system UI overlay style to dark color
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor:
+            Colors.white, // Set to any dark color you prefer
+        systemNavigationBarIconBrightness:
+            Brightness.dark, // Makes icons visible
+      ),
+    );
     await Get.putAsync(() => UtilitiesService().init());
     // await Future.delayed(const Duration(minutes: 2));
   }
