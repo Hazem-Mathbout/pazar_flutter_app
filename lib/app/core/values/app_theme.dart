@@ -12,10 +12,10 @@ class AppTheme {
 
       // AppBar
       appBarTheme: const AppBarTheme(
-        // backgroundColor: Colors.white,
-        backgroundColor:
-            Theme.of(context).appBarTheme.backgroundColor ?? Colors.red,
-        foregroundColor: AppColors.foregroundPrimary,
+        backgroundColor: Colors.white,
+        // backgroundColor:
+        //     Theme.of(context).appBarTheme.backgroundColor ?? Colors.red,
+        // foregroundColor: AppColors.foregroundPrimary,
         elevation: 1,
         iconTheme: IconThemeData(color: AppColors.foregroundSecondary),
         titleTextStyle: TextStyle(

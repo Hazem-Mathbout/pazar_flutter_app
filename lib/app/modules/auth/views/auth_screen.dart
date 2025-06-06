@@ -82,7 +82,9 @@ class AuthScreen extends StatelessWidget {
                 SocialButton(
                   text: 'جوجل',
                   iconPath: 'assets/images/google.png',
-                  onPressed: () {},
+                  onPressed: () async {
+                    await authController.signInWithGoogle();
+                  },
                 ),
                 const SizedBox(height: 8),
                 SocialButton(

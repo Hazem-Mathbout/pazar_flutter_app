@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pazar/app/core/utilities_service.dart';
@@ -8,6 +10,7 @@ import 'package:pazar/app/data/data_layer.dart';
 import 'package:pazar/app/routes/app_pages.dart';
 import 'package:pazar/app/shared/utils/error_handler.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthController extends GetxController {
   final DataLayer _dataLayer = Get.find<DataLayer>();
@@ -22,6 +25,19 @@ class AuthController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final phoneController = TextEditingController();
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    // clientId: '235888666003-ko31alab2pqvf884dki463b988n01cv6',
+    serverClientId:
+        '235888666003-icescb4nsrls2kbnpdufmnesgpom5akg.apps.googleusercontent.com',
+
+    scopes: [
+      'email',
+      'profile',
+      'openid',
+      // 'https://www.googleapis.com/auth/userinfo.profile',
+    ],
+  );
 
   @override
   void onInit() {
@@ -126,6 +142,74 @@ class AuthController extends GetxController {
       Get.snackbar('خطأ', errorMessage);
     } finally {
       cancelLoading();
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    final cancelLoading = Toasts.showToastLoading();
+
+    try {
+      final googleIdToken = await _getGoogleIdToken();
+      log("googleIdToken: $googleIdToken");
+
+      if (googleIdToken == null) {
+        Get.snackbar('خطأ', "فشل تسجيل الدخول. الرجاء المحاولة مرة أخرى.");
+        return;
+      }
+
+      final response = await _dataLayer.post('/users/authenticate', data: {
+        "google_id_token": googleIdToken,
+      });
+
+      log("response Google: ${response.data}");
+      log("statusCode: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final prefs = await SharedPreferences.getInstance();
+        final token = response.data['token'];
+
+        await prefs.setString('token', token);
+        _dataLayer.setToken(token);
+
+        var userInfo = await fetchUserInfo(response.data['id']);
+        if (userInfo != null) {
+          userModel.value = userInfo;
+          await prefs.setString('user', userInfo.toRawJson());
+        }
+
+        Get.offAllNamed(Routes.HOME);
+      } else {
+        Get.snackbar('خطأ', "فشل تسجيل الدخول. الرجاء المحاولة مرة أخرى.");
+      }
+    } catch (e) {
+      log("error: $e");
+      final errorMessage =
+          extractErrorMessage(e, fallback: 'حدث خطأ أثناء تسجيل الدخول');
+      Get.snackbar('خطأ', errorMessage);
+      rethrow;
+    } finally {
+      cancelLoading();
+    }
+  }
+
+  Future<String?> _getGoogleIdToken() async {
+    // Renamed method
+    try {
+      log("Starting _getGoogleIdToken");
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      log("googleUser: $googleUser");
+      if (googleUser == null) return null;
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      log("googleAuth: ${googleAuth.idToken}");
+
+      // Get the ID token instead of access token
+      return googleAuth.idToken; // This is the JWT token your backend needs
+    } catch (error) {
+      debugPrint("Google Sign-In Error: $error");
+      return null;
     }
   }
 
