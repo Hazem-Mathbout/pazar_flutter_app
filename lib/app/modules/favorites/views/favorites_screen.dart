@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pazar/app/data/models/advertisement_model.dart';
 import 'package:pazar/app/modules/favorites/controllers/favorites_controller.dart';
-import 'package:pazar/app/modules/home/views/widgets/car_card.dart';
-import 'package:pazar/app/modules/home/views/widgets/car_card_skeleton.dart';
+import 'package:pazar/app/modules/cars/views/widgets/car_card.dart';
+import 'package:pazar/app/modules/cars/views/widgets/car_card_skeleton.dart';
 import 'package:pazar/app/shared/widgets/first_page_error_indicator.dart';
 
 class FavoritesScreen extends StatelessWidget {

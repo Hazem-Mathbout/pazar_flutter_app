@@ -5,6 +5,8 @@ abstract class Routes {
   Routes._();
 
   static const HOME = _Paths.HOME;
+
+  static const CARS = _Paths.CARS;
   static const CHATS = _Paths.CHATS;
   static const CONVERSATION = _Paths.CONVERSATION;
   static const CAR_DETAILS = _Paths.CAR_DETAILS;
@@ -20,6 +22,8 @@ abstract class _Paths {
   _Paths._();
 
   static const HOME = '/home';
+
+  static const CARS = '/cars';
   static const CHATS = '/chats';
   static const CONVERSATION = '/conversation';
   static const CAR_DETAILS = '/car-details';

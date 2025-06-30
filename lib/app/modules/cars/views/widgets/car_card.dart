@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:pazar/app/core/values/colors.dart';
 import 'package:pazar/app/data/models/advertisement_model.dart';
 import 'package:pazar/app/modules/car_details/views/car_details_screen.dart';
-import 'package:pazar/app/modules/home/controllers/advertisement_controller.dart';
-import 'package:pazar/app/modules/home/views/widgets/show_report_dialog.dart';
+import 'package:pazar/app/modules/cars/controllers/advertisement_controller.dart';
+import 'package:pazar/app/modules/cars/views/widgets/show_report_dialog.dart';
 
 class CarCard extends StatelessWidget {
   final Advertisement advertisement;

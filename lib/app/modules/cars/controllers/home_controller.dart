@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 // import 'package:pazar/app/data/data_layer.dart';
-import 'package:pazar/app/modules/home/controllers/advertisement_controller.dart';
+import 'package:pazar/app/modules/cars/controllers/advertisement_controller.dart';
 import 'package:pazar/app/routes/app_pages.dart';
 
 class HomeController extends GetxController {

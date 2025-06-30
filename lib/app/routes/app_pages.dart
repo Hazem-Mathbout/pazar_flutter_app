@@ -3,6 +3,7 @@ import 'package:pazar/app/modules/auth/bindings/auth_binding.dart';
 // import 'package:pazar/app/modules/auth/middleware/auth_middleware.dart';
 import 'package:pazar/app/modules/auth/views/auth_screen.dart';
 import 'package:pazar/app/modules/auth/views/otp_verficiation_screen.dart';
+import 'package:pazar/app/modules/home/views/home_screen.dart';
 import 'package:pazar/app/modules/my_ads/binding/my_ads_binding.dart';
 import 'package:pazar/app/modules/my_ads/views/my_ads_screen.dart';
 import 'package:pazar/app/modules/new_ad/middleware/new_ad_middleware.dart';
@@ -13,8 +14,8 @@ import '../modules/chats/bindings/chats_binding.dart';
 import '../modules/chats/views/chats_screen.dart';
 import '../modules/conversation/bindings/conversation_binding.dart';
 import '../modules/conversation/views/conversation_screen.dart';
-import '../modules/home/bindings/home_binding.dart';
-import '../modules/home/views/home_screen.dart';
+import '../modules/cars/bindings/home_binding.dart';
+import '../modules/cars/views/cars_screen.dart';
 import '../modules/new_ad/bindings/new_ad_binding.dart';
 import '../modules/new_ad/views/new_ad_screen.dart';
 
@@ -43,6 +44,11 @@ class AppPages {
     GetPage(
       name: _Paths.HOME,
       page: () => HomeScreen(),
+      binding: HomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.CARS,
+      page: () => CarsScreen(),
       binding: HomeBinding(),
     ),
     GetPage(

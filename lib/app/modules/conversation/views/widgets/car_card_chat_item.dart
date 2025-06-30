@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pazar/app/data/models/advertisement_model.dart';
-import 'package:pazar/app/modules/home/views/widgets/car_card.dart'; // Import the car model
+import 'package:pazar/app/modules/cars/views/widgets/car_card.dart'; // Import the car model
 
 class CarCardChatItem extends StatelessWidget {
   final Advertisement carInfo;

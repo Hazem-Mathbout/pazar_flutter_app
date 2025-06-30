@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pazar/app/modules/home/controllers/advertisement_controller.dart';
+import 'package:pazar/app/modules/cars/controllers/advertisement_controller.dart';
 import '../../../../core/values/colors.dart'; // Import colors
 
 class CategoryTabs extends StatefulWidget {

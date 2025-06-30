@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl; // For formatting timestamp
 import 'package:pazar/app/core/values/colors.dart'; // Assuming colors are defined here
 import 'package:pazar/app/data/models/chat_message_model.dart';
-import 'package:pazar/app/modules/home/views/widgets/car_card.dart'; // Import the message model
+import 'package:pazar/app/modules/cars/views/widgets/car_card.dart'; // Import the message model
 
 class MessageBubble extends StatelessWidget {
   final ChatMessageModel message;

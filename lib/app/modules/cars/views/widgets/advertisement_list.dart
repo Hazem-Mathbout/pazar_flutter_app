@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:pazar/app/modules/home/controllers/advertisement_controller.dart';
-import 'package:pazar/app/modules/home/views/widgets/car_card.dart';
-import 'package:pazar/app/modules/home/views/widgets/car_card_skeleton.dart';
+import 'package:pazar/app/modules/cars/controllers/advertisement_controller.dart';
+import 'package:pazar/app/modules/cars/views/widgets/car_card.dart';
+import 'package:pazar/app/modules/cars/views/widgets/car_card_skeleton.dart';
 import '../../../../data/models/advertisement_model.dart';
 
 class AdvertisementList extends StatelessWidget {

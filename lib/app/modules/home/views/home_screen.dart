@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
+import 'package:pazar/app/modules/cars/controllers/advertisement_controller.dart';
+import 'package:pazar/app/modules/cars/controllers/home_controller.dart';
+import 'package:pazar/app/modules/cars/views/widgets/advertisement_list.dart';
+import 'package:pazar/app/modules/cars/views/widgets/category_tabs.dart';
+import 'package:pazar/app/modules/cars/views/widgets/filter_sort_bar.dart';
 import 'package:pazar/app/modules/favorites/views/favorites_screen.dart';
+import 'package:pazar/app/modules/home/views/widgets/home_widget.dart';
 import 'package:pazar/app/modules/menu/views/menu_screen.dart';
 import 'package:pazar/app/modules/my_ads/views/my_ads_screen.dart';
 import '../../../core/values/colors.dart';
-import '../controllers/advertisement_controller.dart';
-import 'widgets/advertisement_list.dart';
-import 'widgets/filter_sort_bar.dart';
-import 'widgets/category_tabs.dart';
-import '../controllers/home_controller.dart'; // <--- IMPORT CONTROLLER
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -22,21 +22,22 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> widgetOptions = <Widget>[
-      RefreshIndicator(
-        onRefresh: () async => advertisementController.refreshData(),
-        child: CustomScrollView(
-          controller: homeScrollController,
-          slivers: [
-            const SliverToBoxAdapter(child: FilterSortBar()),
-            const SliverToBoxAdapter(child: CategoryTabs()),
-            SliverPadding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-              sliver: AdvertisementList(), // Make sure this returns a sliver
-            ),
-          ],
-        ),
-      ),
+      HomeWidget(),
+      // RefreshIndicator(
+      //   onRefresh: () async => advertisementController.refreshData(),
+      //   child: CustomScrollView(
+      //     controller: homeScrollController,
+      //     slivers: [
+      //       const SliverToBoxAdapter(child: FilterSortBar()),
+      //       const SliverToBoxAdapter(child: CategoryTabs()),
+      //       SliverPadding(
+      //         padding:
+      //             const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+      //         sliver: AdvertisementList(), // Make sure this returns a sliver
+      //       ),
+      //     ],
+      //   ),
+      // ),
       MyAdsScreen(),
       const Center(child: Text("There is an error occure!")),
       FavoritesScreen(),
@@ -44,14 +45,14 @@ class HomeScreen extends StatelessWidget {
     ];
     return Obx(() => Scaffold(
           backgroundColor: AppColors.lightGrey,
-          appBar: homeController.showAppBarForIndices
-                  .contains(homeController.selectedIndex.value)
-              ? homeController.isSearching.value
-                  ? _buildSearchAppBar(
-                      (p0) => advertisementController.search(p0),
-                    )
-                  : _buildDefaultAppBar()
-              : null,
+          // appBar: homeController.showAppBarForIndices
+          //         .contains(homeController.selectedIndex.value)
+          //     ? homeController.isSearching.value
+          //         ? _buildSearchAppBar(
+          //             (p0) => advertisementController.search(p0),
+          //           )
+          //         : _buildDefaultAppBar()
+          //     : null,
           body: Center(
             child: widgetOptions.elementAt(homeController.selectedIndex.value),
           ),

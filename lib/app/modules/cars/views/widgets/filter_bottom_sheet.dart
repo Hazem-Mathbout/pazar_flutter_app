@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pazar/app/core/values/colors.dart';
 import 'package:pazar/app/data/models/advertisement_model.dart';
-import 'package:pazar/app/modules/home/controllers/advertisement_controller.dart';
-import 'package:pazar/app/modules/home/views/widgets/filter_actions.dart';
+import 'package:pazar/app/modules/cars/controllers/advertisement_controller.dart';
+import 'package:pazar/app/modules/cars/views/widgets/filter_actions.dart';
 
 class FilterBottomSheet extends StatelessWidget {
   FilterBottomSheet({super.key});

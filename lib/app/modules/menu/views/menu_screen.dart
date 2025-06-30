@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pazar/app/core/values/colors.dart';
 import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
-import 'package:pazar/app/modules/home/controllers/home_controller.dart';
+import 'package:pazar/app/modules/cars/controllers/home_controller.dart';
 import 'package:pazar/app/modules/menu/views/widgets/change_password_sheet.dart';
 import 'package:pazar/app/routes/app_pages.dart';
 import 'widgets/edit_account_info_sheet.dart';
