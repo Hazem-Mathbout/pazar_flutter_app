@@ -11,6 +11,7 @@ import 'package:pazar/app/shared/widgets/custom_appbar.dart';
 import 'package:pazar/app/shared/widgets/custom_input_filed.dart';
 import 'package:pazar/app/modules/new_ad/widgets/image_preview.dart';
 import 'package:pazar/app/modules/new_ad/widgets/image_selector.dart';
+import 'package:pazar/app/shared/widgets/custom_radio_selection.dart';
 import 'package:pazar/app/shared/widgets/custom_searchable_dropdown.dart';
 
 class NewAdScreen extends StatelessWidget {
@@ -83,55 +84,52 @@ class NewAdScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     GetBuilder<NewAdController>(
-                        id: 'model',
-                        builder: (controller) {
-                          // print(controller.selectedModel);
-                          return CustomSearchableDropdown<Make>(
-                            info: 'المودل',
-                            fetchItems: (filter) async {
-                              var allItems = await controller
-                                  .fetchModels(controller.selectedMakeID ?? '');
-                              var items = allItems
-                                  .where((item) => (item.label['ar'] ?? '')
-                                      .toLowerCase()
-                                      .contains(filter?.toLowerCase() ?? ''))
-                                  .toList();
-                              return items;
-                            },
-                            itemAsString: (make) => make.label['ar']!,
-                            onChanged: (selectedMake) {
-                              controller.selectedModel =
-                                  selectedMake?.label['ar'];
-                              // print(
-                              //     "selected make: ${selectedMake?.name} || id: ${selectedMake?.id}");
-                              controller.selectedModelID =
-                                  selectedMake?.id.toString();
-                            },
-                            customFilterFn: (item, filter) {
-                              return (item.label['ar'] ?? '')
-                                  .toLowerCase()
-                                  .contains(filter.toLowerCase());
-                            },
-                            hint: controller.selectedModel,
-                          );
-                        }),
+                      id: 'model',
+                      builder: (controller) {
+                        // print(controller.selectedModel);
+                        return CustomSearchableDropdown<Make>(
+                          info: 'المودل',
+                          fetchItems: (filter) async {
+                            var allItems = await controller
+                                .fetchModels(controller.selectedMakeID ?? '');
+                            var items = allItems
+                                .where((item) => (item.label['ar'] ?? '')
+                                    .toLowerCase()
+                                    .contains(filter?.toLowerCase() ?? ''))
+                                .toList();
+                            return items;
+                          },
+                          itemAsString: (make) => make.label['ar']!,
+                          onChanged: (selectedMake) {
+                            controller.selectedModel =
+                                selectedMake?.label['ar'];
+                            // print(
+                            //     "selected make: ${selectedMake?.name} || id: ${selectedMake?.id}");
+                            controller.selectedModelID =
+                                selectedMake?.id.toString();
+                          },
+                          customFilterFn: (item, filter) {
+                            return (item.label['ar'] ?? '')
+                                .toLowerCase()
+                                .contains(filter.toLowerCase());
+                          },
+                          hint: controller.selectedModel,
+                        );
+                      },
+                    ),
                     const SizedBox(height: 16),
-                    CustomSearchableDropdown<String>(
+                    CustomRadioSelection<String>(
                       info: 'الوقود',
                       items:
                           MetaLabelOptions.fuelTypes.map((e) => e.ar).toList(),
                       itemAsString: (item) => item,
                       onChanged: (value) {
                         controller.selectedFuelType = value;
-                        // controller.selectedFuelType = MetaLabelOptions.fuelTypes
-                        //     .firstWhere((element) => element.ar == value)
-                        //     .en
-                        //     .toLowerCase();
                       },
                       initialValue: controller.selectedFuelType,
                     ),
                     const SizedBox(height: 16),
-                    CustomSearchableDropdown<String>(
+                    CustomRadioSelection<String>(
                       info: 'ناقل الحركة',
                       items: MetaLabelOptions.transmissions
                           .map((e) => e.ar)
@@ -139,16 +137,11 @@ class NewAdScreen extends StatelessWidget {
                       itemAsString: (item) => item,
                       onChanged: (value) {
                         controller.selectedTransmission = value;
-                        // controller.selectedTransmission = MetaLabelOptions
-                        //     .transmissions
-                        //     .firstWhere((element) => element.ar == value)
-                        //     .en
-                        //     .toLowerCase();
                       },
                       initialValue: controller.selectedTransmission,
                     ),
                     const SizedBox(height: 16),
-                    CustomSearchableDropdown<String>(
+                    CustomRadioSelection<String>(
                       info: 'نوع الهيكل',
                       items: utilitiesService.bodyTypes
                           .map((e) => e.name['ar'] ?? '')
@@ -224,7 +217,7 @@ class NewAdScreen extends StatelessWidget {
                       initialValue: controller.selectedExteriorColor,
                     ),
                     const SizedBox(height: 16),
-                    CustomSearchableDropdown<String>(
+                    CustomRadioSelection<String>(
                       info: 'المواصفات الإقليمية',
                       items: utilitiesService.regionalSpecs
                           .map((e) => e.label['ar'] ?? '')
@@ -296,17 +289,11 @@ class NewAdScreen extends StatelessWidget {
                     itemAsString: (item) => item,
                     onChanged: (value) {
                       controller.selectedProvinc = value;
-                      // if (value != null) {
-                      //   final selectedKey = utilitiesService.provinces
-                      //       .firstWhere((e) => e.name['ar'] == value)
-                      //       .key;
-                      //   controller.selectedProvinc = selectedKey;
-                      // }
                     },
                     initialValue: controller.selectedProvinc,
                   ),
                   const SizedBox(height: 16),
-                  CustomSearchableDropdown<String>(
+                  CustomRadioSelection<String>(
                     info: 'حالة السيارة',
                     items:
                         MetaLabelOptions.conditions.map((e) => e.ar).toList(),

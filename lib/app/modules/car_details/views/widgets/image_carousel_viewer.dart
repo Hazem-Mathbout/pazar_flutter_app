@@ -117,15 +117,20 @@ class ImageCarouselViewer extends StatelessWidget {
     return InkWell(
       onTap: () => Get.back(),
       child: Container(
-        width: 32,
-        height: 32,
-        decoration:
-            const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+        width: 42, // Increased from 32
+        height: 42, // Increased from 32
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.5), // 50% transparency
+          shape: BoxShape.circle,
+        ),
         child: Center(
           child: Transform.translate(
-            offset: const Offset(-3, 0),
-            child: const Icon(Icons.arrow_back_ios,
-                color: AppColors.foregroundSecondary, size: 20),
+            offset: const Offset(-4, 0),
+            child: const Icon(
+              Icons.arrow_back_ios,
+              color: AppColors.foregroundSecondary,
+              size: 28, // Slightly larger icon to match bigger container
+            ),
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pazar/app/core/values/colors.dart';
 import 'package:pazar/app/data/models/user_model.dart';
 import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
 import 'package:pazar/app/shared/widgets/custom_action_bottom_sheet.dart';
@@ -50,30 +51,44 @@ class _EditInfoSheetState extends State<EditInfoSheet> {
     final sheetWidth = screenWidth > 392 ? 392.0 : screenWidth;
     print("currentProfileImgUrl: $currentProfileImgUrl");
 
-    return Container(
-      width: sheetWidth,
-      decoration: const BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Color(0x29000000), // #00000029
-              offset: Offset(0, 8),
-              blurRadius: 16,
-            ),
-            BoxShadow(
-              color: Color(0x14000000), // #00000014
-              offset: Offset(0, 0),
-              blurRadius: 4,
-            ),
-          ],
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(16),
-            topLeft: Radius.circular(16),
-          )),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.9,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('تعديل المعلومات'),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        leading: const SizedBox.shrink(),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.close),
+            tooltip: 'إغلاق',
+            onPressed: () => Get.back(),
+            color: AppColors.foregroundSecondary,
+          ),
+        ],
+        titleTextStyle: const TextStyle(
+          fontFamily: 'Rubik',
+          fontWeight: FontWeight.w500,
+          fontSize: 18,
+          height: 24 / 18,
+          color: Color(0xFF171717),
         ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0), // Height of the border
+          child: Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Color(0xFFE5E5E5),
+                  width: 1.0,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      body: Container(
+        color: Colors.white,
         child: SingleChildScrollView(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -82,29 +97,6 @@ class _EditInfoSheetState extends State<EditInfoSheet> {
             mainAxisSize: MainAxisSize.min, // ⬅️ Wrap height based on content
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFE5E5E5), width: 1),
-                  ),
-                ),
-                width: double.infinity,
-                child: const Text(
-                  'تعديل المعلومات',
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontFamily: 'Rubik',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                    height: 24 / 18,
-                    color: Color(0xFF171717),
-                  ),
-                ),
-              ),
-
               // Body
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,31 +270,31 @@ class _AvatarWithEditIconState extends State<AvatarWithEditIcon> {
   }
 }
 
-void showEditInfoSheet(BuildContext context, UserModel currentUserInfo) {
-  showGeneralDialog(
-    context: context,
-    barrierLabel: "Edit Info",
-    barrierDismissible: true,
-    barrierColor: Colors.black.withValues(alpha: 0.3),
-    transitionDuration: const Duration(milliseconds: 300),
-    pageBuilder: (_, __, ___) => const SizedBox.shrink(),
-    transitionBuilder: (context, animation, secondaryAnimation, child) {
-      final screenWidth = MediaQuery.of(context).size.width;
-      final sheetWidth = screenWidth > 392 ? 392.0 : screenWidth;
+// void showEditInfoSheet(BuildContext context, UserModel currentUserInfo) {
+//   showGeneralDialog(
+//     context: context,
+//     barrierLabel: "Edit Info",
+//     barrierDismissible: true,
+//     barrierColor: Colors.black.withValues(alpha: 0.3),
+//     transitionDuration: const Duration(milliseconds: 300),
+//     pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+//     transitionBuilder: (context, animation, secondaryAnimation, child) {
+//       final screenWidth = MediaQuery.of(context).size.width;
+//       final sheetWidth = screenWidth > 392 ? 392.0 : screenWidth;
 
-      return Align(
-        alignment: Alignment.bottomRight, // ⬅️ Bottom + Right
-        child: Transform.translate(
-          offset: Offset(sheetWidth * (1 - animation.value), 0),
-          child: Material(
-            color: Colors.transparent,
-            child: GestureDetector(
-              onTap: () => FocusScope.of(context).unfocus(),
-              child: EditInfoSheet(userModel: currentUserInfo),
-            ),
-          ),
-        ),
-      );
-    },
-  );
-}
+//       return Align(
+//         alignment: Alignment.bottomRight, // ⬅️ Bottom + Right
+//         child: Transform.translate(
+//           offset: Offset(sheetWidth * (1 - animation.value), 0),
+//           child: Material(
+//             color: Colors.transparent,
+//             child: GestureDetector(
+//               onTap: () => FocusScope.of(context).unfocus(),
+//               child: EditInfoSheet(userModel: currentUserInfo),
+//             ),
+//           ),
+//         ),
+//       );
+//     },
+//   );
+// }

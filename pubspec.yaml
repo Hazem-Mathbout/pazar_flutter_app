@@ -46,7 +46,6 @@ dependencies:
   image_picker: ^1.1.2
   dropdown_search: ^6.0.2
   redacted: ^1.0.13
-  flutter_native_splash: ^2.4.6
   lottie: ^3.3.1
   lucide_icons: ^0.257.0
   font_awesome_flutter: ^10.8.0
@@ -59,6 +58,8 @@ dev_dependencies:
     sdk: flutter
   
   change_app_package_name: ^1.5.0
+  flutter_native_splash: ^2.4.6
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -71,50 +72,25 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/logo-app.png" # Path to your logo
+  image_path: "assets/images/app_icon.png" # Path to your logo
   adaptive_icon_background: "#ffffff" # (optional) for Android adaptive icon
   remove_alpha_ios: true
   # adaptive_icon_foreground: "assets/images/app_icon_foreground.png" # (optional)
 
 
-# flutter_native_splash:
-#   # color: "#ffffff"
-#   # color_dark: "#ffffff"         # ensures white in dark mode too
-#   image: assets/images/test_splash.png
-#   background_image: "assets/images/background.png"
-#   background_image_dark: "assets/images/background.png"
-#   android: true
-#   ios: false
-#   web: false
-#   fullscreen: true
+flutter_native_splash:
+  background_image: "assets/images/bg.png"
+  image: assets/images/logo_alone.png
+  android: true
+  ios: true
+  web: false
+  # branding: assets/images/bg.png  # Optional (remove if not needed)
 
-#   android_12:
-#     image: assets/images/test_splash.png
-#     background_image: "assets/images/background.png"
-#     background_image_dark: "assets/images/background.png"
-#     # image_dark: assets/images/test_splash.png
-#     # color: "#ffffff"
-#     # color_dark: "#ffffff"
-#     # icon_background_color: "#ffffff"
-#     # icon_background_color_dark: "#ffffff"
+  android_12:
+    image: assets/images/logo_alone.png
+    color: "#f20f1d"
 
 
-# flutter_native_splash:
-
-#   android: true
-#   ios: true
-#   web: false
- 
-#   color: "#ffffff"
-#   image: "assets/images/test_splash.png"
-#   color_dark: "#ffffff"
-#   image_dark: "assets/images/test_splash.png"
-
-#   android_12:
-#       image: "assets/images/test_splash.png"
-#       color: "#ffffff"
-#       image_dark: "assets/images/test_splash.png"
-#       color_dark: "#ffffff"
 
 
 # For information on the generic Dart part of this file, see the

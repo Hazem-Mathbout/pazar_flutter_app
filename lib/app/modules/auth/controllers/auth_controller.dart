@@ -177,7 +177,7 @@ class AuthController extends GetxController {
           await prefs.setString('user', userInfo.toRawJson());
         }
 
-        Get.offAllNamed(Routes.HOME);
+        Get.offAllNamed(Routes.CARS);
       } else {
         Get.snackbar('خطأ', "فشل تسجيل الدخول. الرجاء المحاولة مرة أخرى.");
       }

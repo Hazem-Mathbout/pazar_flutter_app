@@ -5,6 +5,7 @@ import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
 import 'package:pazar/app/modules/cars/controllers/home_controller.dart';
 import 'package:pazar/app/modules/menu/views/widgets/change_password_sheet.dart';
 import 'package:pazar/app/routes/app_pages.dart';
+import 'package:pazar/app/shared/utils/open_whatsapp_to_help.dart';
 import 'widgets/edit_account_info_sheet.dart';
 import 'widgets/setting_tail.dart';
 
@@ -30,6 +31,7 @@ class MenuScreen extends GetView<MenuController> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
+        // surfaceTintColor: Colors.transparent,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -175,13 +177,18 @@ class MenuScreen extends GetView<MenuController> {
                 () => Visibility(
                   visible: authController.userModel.value != null,
                   child: SettingsTile(
-                    iconImage: 'assets/icons/user-circle.png',
-                    title: 'إعدادات الحساب',
-                    onTap: () => showEditInfoSheet(
-                      context,
-                      authController.userModel.value!,
-                    ),
-                  ),
+                      iconImage: 'assets/icons/user-circle.png',
+                      title: 'إعدادات الحساب',
+                      onTap: () => Get.to(
+                            () => EditInfoSheet(
+                              userModel: authController.userModel.value!,
+                            ),
+                          )
+                      // showEditInfoSheet(
+                      //   context,
+                      //   authController.userModel.value!,
+                      // ),
+                      ),
                 ),
               ),
               Obx(
@@ -190,7 +197,8 @@ class MenuScreen extends GetView<MenuController> {
                   child: SettingsTile(
                     iconImage: 'assets/icons/lock.png',
                     title: 'تعديل كلمة المرور',
-                    onTap: () => showEditPasswordInfoSheet(context),
+                    onTap: () => Get.to(() => const EditPasswordInfoSheet()),
+                    // showEditPasswordInfoSheet(context),
                   ),
                 ),
               ),
@@ -223,19 +231,17 @@ class MenuScreen extends GetView<MenuController> {
                 ),
               ),
               const SizedBox(height: 16),
+              // SettingsTile(
+              //   iconImage: 'assets/icons/language.png',
+              //   title: 'اللغة',
+              //   onTap: () {
+              //     print('Navigating to settings');
+              //   },
+              // ),
               SettingsTile(
-                iconImage: 'assets/icons/language.png',
-                title: 'اللغة',
-                onTap: () {
-                  print('Navigating to settings');
-                },
-              ),
-              SettingsTile(
-                iconImage: 'assets/icons/phone.png',
+                iconImage: 'assets/icons/brand-whatsapp.png',
                 title: 'تواصل معنا',
-                onTap: () {
-                  print('Navigating to settings');
-                },
+                onTap: () => openWhatsApp(phoneNumber: ''),
               ),
               SettingsTile(
                 iconImage: 'assets/icons/info-circle.png',

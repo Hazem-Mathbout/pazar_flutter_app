@@ -112,7 +112,7 @@ class OtpVerficiationScreen extends StatelessWidget {
                 child: PrimaryButton(
                   text: 'متابعة',
                   onPressed: () {
-                    Get.offAllNamed(Routes.HOME);
+                    Get.offAllNamed(Routes.CARS);
                   },
                 ),
               ),

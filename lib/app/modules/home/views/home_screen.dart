@@ -11,6 +11,8 @@ import 'package:pazar/app/modules/menu/views/menu_screen.dart';
 import 'package:pazar/app/modules/my_ads/views/my_ads_screen.dart';
 import '../../../core/values/colors.dart';
 
+// New design for the home screen will be used in the later versions d\
+// from the app.
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 

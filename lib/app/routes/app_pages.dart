@@ -3,7 +3,7 @@ import 'package:pazar/app/modules/auth/bindings/auth_binding.dart';
 // import 'package:pazar/app/modules/auth/middleware/auth_middleware.dart';
 import 'package:pazar/app/modules/auth/views/auth_screen.dart';
 import 'package:pazar/app/modules/auth/views/otp_verficiation_screen.dart';
-import 'package:pazar/app/modules/home/views/home_screen.dart';
+// import 'package:pazar/app/modules/home/views/home_screen.dart';
 import 'package:pazar/app/modules/my_ads/binding/my_ads_binding.dart';
 import 'package:pazar/app/modules/my_ads/views/my_ads_screen.dart';
 import 'package:pazar/app/modules/new_ad/middleware/new_ad_middleware.dart';
@@ -24,7 +24,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.HOME;
+  static const INITIAL = Routes.CARS;
 
   static final routes = [
     // GetPage(
@@ -41,11 +41,11 @@ class AppPages {
       name: _Paths.OTPVERFICIATION,
       page: () => const OtpVerficiationScreen(),
     ),
-    GetPage(
-      name: _Paths.HOME,
-      page: () => HomeScreen(),
-      binding: HomeBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.HOME,
+    //   page: () => HomeScreen(),
+    //   binding: HomeBinding(),
+    // ),
     GetPage(
       name: _Paths.CARS,
       page: () => CarsScreen(),

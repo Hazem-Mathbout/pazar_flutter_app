@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pazar/app/modules/favorites/views/favorites_screen.dart';
+import 'package:pazar/app/modules/menu/views/menu_screen.dart';
+import 'package:pazar/app/modules/my_ads/views/my_ads_screen.dart';
 import '../../../core/values/colors.dart';
 import '../controllers/advertisement_controller.dart';
 import 'widgets/advertisement_list.dart';
@@ -7,6 +10,9 @@ import 'widgets/filter_sort_bar.dart';
 import 'widgets/category_tabs.dart';
 import '../controllers/home_controller.dart'; // <--- IMPORT CONTROLLER
 
+/// this [CarsScreen] consider as the home page for the current version
+///
+/// from pazarcom app
 class CarsScreen extends StatelessWidget {
   CarsScreen({super.key});
 
@@ -33,27 +39,127 @@ class CarsScreen extends StatelessWidget {
           ],
         ),
       ),
-      // MyAdsScreen(),
-      // const Center(child: Text("There is an error occure!")),
-      // FavoritesScreen(),
-      // MenuScreen(),
+      MyAdsScreen(),
+      const Center(child: Text("There is an error occure!")),
+      FavoritesScreen(),
+      MenuScreen(),
     ];
-    return
-        // Obx(
-        //   () =>
-        Scaffold(
-      backgroundColor: AppColors.lightGrey,
-      // appBar: homeController.showAppBarForIndices
-      //         .contains(homeController.selectedIndex.value)
-      //     ? homeController.isSearching.value
-      //         ? _buildSearchAppBar(
-      //             (p0) => advertisementController.search(p0),
-      //           )
-      //         : _buildDefaultAppBar()
-      //     : null,
-      body: SafeArea(
-        child: Center(
-          child: widgetOptions.elementAt(0),
+    return Obx(
+      () => Scaffold(
+        backgroundColor: AppColors.lightGrey,
+        appBar: homeController.showAppBarForIndices
+                .contains(homeController.selectedIndex.value)
+            ? homeController.isSearching.value
+                ? _buildSearchAppBar(
+                    (p0) => advertisementController.search(p0),
+                  )
+                : _buildDefaultAppBar()
+            : null,
+        body: SafeArea(
+          child: Center(
+            child: widgetOptions.elementAt(homeController.selectedIndex.value),
+          ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          selectedLabelStyle: const TextStyle(
+            fontFamily: 'Rubik',
+            fontWeight: FontWeight.bold,
+            fontSize: 12.0,
+            color: Colors.black,
+            letterSpacing: 0,
+          ),
+          unselectedLabelStyle: const TextStyle(
+            fontFamily: 'Rubik',
+            fontWeight: FontWeight.w400,
+            fontSize: 12.0,
+            color: Colors.black,
+            letterSpacing: 0,
+          ),
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icons/home.png',
+                height: 20,
+                width: 20,
+                color: AppColors.foregroundHint,
+              ),
+              activeIcon: Image.asset(
+                'assets/icons/home.png',
+                height: 20,
+                width: 20,
+                color: AppColors.textBrand,
+              ),
+              label: 'الرئيسية',
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icons/my_ads.png',
+                height: 20,
+                width: 20,
+                color: AppColors.foregroundHint,
+              ),
+              activeIcon: Image.asset(
+                'assets/icons/my_ads.png',
+                height: 20,
+                width: 20,
+                color: AppColors.textBrand,
+              ),
+              label: 'اعلاناتي',
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icons/add_ads.png',
+                height: 20,
+                width: 20,
+                color: AppColors.foregroundHint,
+              ),
+              activeIcon: Image.asset(
+                'assets/icons/add_ads.png',
+                height: 20,
+                width: 20,
+                color: AppColors.textBrand,
+              ),
+              label: 'اعلان جديد',
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icons/heart.png',
+                height: 20,
+                width: 20,
+                color: AppColors.foregroundHint,
+              ),
+              activeIcon: Image.asset(
+                'assets/icons/heart.png',
+                height: 20,
+                width: 20,
+                color: AppColors.textBrand,
+              ),
+              label: 'المفضلة',
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icons/menue.png',
+                height: 20,
+                width: 20,
+                color: AppColors.foregroundHint,
+              ),
+              activeIcon: Image.asset(
+                'assets/icons/menue.png',
+                height: 20,
+                width: 20,
+                color: AppColors.textBrand,
+              ),
+              label: 'القائمة',
+            ),
+          ],
+          currentIndex: homeController.selectedIndex.value,
+          selectedItemColor: AppColors.primaryRed,
+          unselectedItemColor: AppColors.darkGrey,
+          onTap: homeController.onItemTapped,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          elevation: 5.0,
+          showUnselectedLabels: true,
         ),
       ),
     );
@@ -65,24 +171,36 @@ class CarsScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       automaticallyImplyLeading: false,
       elevation: 0.0,
-      leading: IconButton(
-        icon: Image.asset(
-          'assets/icons/search.png',
-          height: 24,
-          width: 24,
-          color: AppColors.foregroundSecondary,
-        ),
-        onPressed: () {
-          Get.find<HomeController>().startSearch();
-        },
-      ),
       title: Image.asset(
-        'assets/images/logo.png',
-        height: 32,
-        width: 32,
+        'assets/images/home_logo.png',
+        height: null,
+        width: 125,
       ),
       centerTitle: true,
-      actions: const [],
+      actions: [
+        IconButton(
+          icon: Image.asset(
+            'assets/icons/search.png',
+            height: 24,
+            width: 24,
+            color: AppColors.foregroundSecondary,
+          ),
+          onPressed: () {
+            Get.find<HomeController>().startSearch();
+          },
+        ),
+      ],
+      //  leading: IconButton(
+      //   icon: Image.asset(
+      //     'assets/icons/search.png',
+      //     height: 24,
+      //     width: 24,
+      //     color: AppColors.foregroundSecondary,
+      //   ),
+      //   onPressed: () {
+      //     Get.find<HomeController>().startSearch();
+      //   },
+      // ),
     );
   }
 
