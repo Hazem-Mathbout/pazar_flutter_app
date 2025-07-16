@@ -205,7 +205,7 @@ class AdsListItem extends StatelessWidget {
 
                     // Title
                     Text(
-                      '${advertisement.make.name} . ${advertisement.model.name}',
+                      advertisement.modelFullName.ar,
                       style: const TextStyle(
                         fontFamily: 'Rubik',
                         fontSize: 14,

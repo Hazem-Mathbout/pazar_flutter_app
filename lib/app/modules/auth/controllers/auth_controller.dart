@@ -18,7 +18,9 @@ class AuthController extends GetxController {
   Rxn<UserModel> userModel = Rxn<UserModel>();
   final utilitiesService = Get.find<UtilitiesService>();
 
-  var isLogin = false.obs;
+  var isLogin = true.obs;
+  var isSendingOTP = false.obs;
+  var whatsappNumberVerifed = false.obs;
 
   // Text editing controllers
   final fullNameController = TextEditingController();
@@ -66,7 +68,11 @@ class AuthController extends GetxController {
     final name = fullNameController.text;
     final email = emailController.text;
     final password = passwordController.text;
-    final phone = phoneController.text;
+    // final phone = phoneController.text;
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+      Get.snackbar('خطأ', 'يرجى إدخال جميع البيانات');
+      return;
+    }
 
     final cancelLoading = Toasts.showToastLoading();
     try {
@@ -74,7 +80,7 @@ class AuthController extends GetxController {
         'name': name,
         'email': email,
         'password': password,
-        'phone': phone,
+        // 'phone': phone,
       });
 
       if (response.statusCode == 200) {
@@ -91,7 +97,9 @@ class AuthController extends GetxController {
         _dataLayer.setToken(token);
 
         Get.snackbar('تم', 'تم إنشاء الحساب بنجاح');
-        Get.toNamed(Routes.OTPVERFICIATION);
+        // sendOTP(phone);
+        // Get.toNamed(Routes.OTPVERFICIATION);
+        Get.offAllNamed(Routes.CARS);
       } else {
         Get.snackbar('خطأ', 'فشل في إنشاء الحساب');
       }
@@ -105,9 +113,74 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<void> sendOTP(String whatsappNumber) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    isSendingOTP.value = true;
+    // final cancelLoading = Toasts.showToastLoading();
+    try {
+      if (whatsappNumber.isEmpty) {
+        Get.snackbar('خطأ', 'لا يمكن ان يكون رقم الجوال فارغ.');
+        return;
+      }
+      final response = await _dataLayer.post('/auth/send-whatsapp-otp', data: {
+        'whatsapp_number': whatsappNumber,
+      });
+      if (response.statusCode == 200) {
+        Get.snackbar('تم', 'تم ارسال كود التحقق الى الواتساب بنجاح');
+      } else {
+        Get.snackbar('خطأ', 'فشل في ارسال كود التحقق الى الواتساب');
+      }
+    } catch (e) {
+      final errorMessage = extractErrorMessage(e,
+          fallback: 'فشل في ارسال كود التحقق الى الواتساب');
+      Get.snackbar('خطأ', errorMessage);
+    } finally {
+      isSendingOTP.value = false;
+      // cancelLoading();
+    }
+  }
+
+  Future<void> verifyOTP(String otp) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    final cancelLoading = Toasts.showToastLoading();
+    try {
+      if (otp.isEmpty) {
+        Get.snackbar('خطأ', 'لا يمكن ان يكون كود التحقق فارغ!');
+        return;
+      }
+      final response =
+          await _dataLayer.post('/auth/verify-whatsapp-otp', data: {
+        'otp': otp,
+      });
+      if (response.statusCode == 200) {
+        // Get.offAllNamed(Routes.CARS);
+        whatsappNumberVerifed.value = true;
+        Get.back();
+      } else {
+        Get.snackbar(
+            'خطأ', 'فشل التحقق من الكود المدخل, الرجاء اعادة المحاولة');
+      }
+    } catch (e) {
+      // print("Errorsfdsfsd: $e");
+
+      const errorMessage =
+          'فشل التحقق من الكود المدخل, الكود المدخل ليس صحيحاً';
+      // extractErrorMessage(e, fallback: '');
+      Get.snackbar('خطأ', errorMessage);
+    } finally {
+      cancelLoading();
+    }
+  }
+
   Future<void> login() async {
     final email = emailController.text;
     final password = passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      Get.snackbar('خطأ', 'يرجى إدخال جميع البيانات');
+      return;
+    }
 
     final cancelLoading = Toasts.showToastLoading();
 
@@ -241,9 +314,24 @@ class AuthController extends GetxController {
   }
 
   Future<void> updateAuthUser(UserModel updatedUser) async {
-    final cancelLoading = Toasts.showToastLoading();
+    var cancelLoading = Toasts.showToastLoading();
+    var shouldStayInUpdateView = false;
 
     try {
+      if (updatedUser.whatsappNumber != userModel.value?.whatsappNumber &&
+          updatedUser.whatsappNumber.isNotEmpty &&
+          whatsappNumberVerifed.value == false) {
+        // you should to verify the new whatsappNumber
+        await sendOTP(updatedUser.whatsappNumber);
+        // cancelLoading();
+        await Get.toNamed(Routes.OTPVERFICIATION);
+
+        if (whatsappNumberVerifed.value == false) {
+          shouldStayInUpdateView = true;
+          return;
+        }
+      }
+
       final Map<String, dynamic> data = {
         'name': updatedUser.name.trim(),
         'email': updatedUser.email.trim(),
@@ -277,7 +365,11 @@ class AuthController extends GetxController {
           extractErrorMessage(e, fallback: 'حدث خطأ أثناء تحديث البيانات');
       Get.snackbar('خطأ', errorMessage);
     } finally {
+      whatsappNumberVerifed.value = false;
       cancelLoading();
+      if (shouldStayInUpdateView == false) {
+        Get.close(0);
+      }
     }
   }
 
@@ -346,4 +438,101 @@ class AuthController extends GetxController {
     debugPrint(
         'user data is:\n${userModel.value.toString()}\ntoken: $userToken');
   }
+
+  // Future<void> checkForUpdate() async {
+  //   try {
+  //     isLoading.value = true;
+
+  //     // Step 1: Get the current app version dynamically
+  //     PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  //     String currentVersion =
+  //         packageInfo.version; // This gets the app version (e.g., '1.0.0')
+
+  //     final response = await authRepository.checkForUpdate();
+  //     isLoading.value = false;
+
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+  //       String latestVersion = data['version_code'];
+  //       bool isMandatory = data['mandatory_update'];
+  //       String appStoreUrl =
+  //           AppConfig.updateFacelancerAppUrl; // data['app_store_url'];
+
+  //       // Step 2: Compare the latest version from the backend with the current app version
+  //       if (latestVersion != currentVersion) {
+  //         if (isMandatory) {
+  //           // Show mandatory update dialog and block access
+  //           await Toasts.showUpdateDialog(
+  //               mandatory: true, appStoreUrl: appStoreUrl);
+  //         } else {
+  //           // Show optional update dialog
+  //           await Toasts.showUpdateDialog(
+  //             mandatory: false,
+  //             appStoreUrl: appStoreUrl,
+  //           );
+  //         }
+  //       }
+  //     } else {
+  //       throw Exception('Failed to check for updates');
+  //     }
+  //   } catch (e) {
+  //     debugPrint("Error (Failed to check for updates): $e ");
+  //     isLoading.value = false; // Stop the loading indicator in case of an error
+  //     // Show an error message to the user
+  //     Get.snackbar(
+  //         'خطأ', // "Error" in Arabic
+  //         'فشل التحقق من التحديثات. حاول مرة أخرى.', // "Failed to check for updates. Please try again." in Arabic
+  //         snackPosition: SnackPosition.BOTTOM,
+  //         backgroundColor:
+  //             Colors.red.shade400, // Use a softer red for a less harsh UI
+  //         colorText: Colors.white,
+  //         duration: const Duration(minutes: 2),
+  //         isDismissible: false,
+  //         margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+  //         // borderRadius: 8,
+  //         padding: const EdgeInsets.all(16),
+  //         icon: const Icon(Icons.error_outline,
+  //             color: Colors.white), // Error icon
+  //         // overlayBlur: 2, // Add a blur effect for better UI presentation
+  //         boxShadows: [
+  //           BoxShadow(
+  //             color: Colors.black.withValues(alpha: 0.2),
+  //             spreadRadius: 2,
+  //             blurRadius: 5,
+  //             offset: const Offset(0, 3),
+  //           ),
+  //         ],
+  //         showProgressIndicator: isLoading.value,
+  //         progressIndicatorBackgroundColor: Colors.white,
+  //         progressIndicatorValueColor:
+  //             const AlwaysStoppedAnimation<Color>(Colors.red),
+  //         mainButton: TextButton(
+  //           onPressed: null,
+  //           child: ElevatedButton.icon(
+  //             onPressed: () async {
+  //               debugPrint("Retry Run Now!");
+
+  //               isLoading.value = true;
+  //               await checkForUpdate(); // Retry the update check
+  //               isLoading.value = false;
+  //             },
+  //             icon: Obx(() => isLoading.value
+  //                 ? const SizedBox(
+  //                     width: 25, height: 25, child: CircularProgressIndicator())
+  //                 : const Icon(Icons.refresh, color: Colors.white)),
+  //             label: const Text('إعادة المحاولة',
+  //                 style: TextStyle(color: Colors.white)), // "Retry" in Arabic
+  //             style: ElevatedButton.styleFrom(
+  //               backgroundColor: Colors.black, // Button color
+  //               padding:
+  //                   const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  //               shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(8),
+  //               ),
+  //             ),
+  //           ),
+  //         ));
+  //     rethrow;
+  //   }
+  // }
 }

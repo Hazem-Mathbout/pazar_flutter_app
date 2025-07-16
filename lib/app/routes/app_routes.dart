@@ -16,6 +16,7 @@ abstract class Routes {
   static const AUTH = _Paths.AUTH;
   static const OTPVERFICIATION = _Paths.OTPVERFICIATION;
   static const SPLASH_SCREEN = _Paths.SPLASH_SCREEN;
+  static const ABOUT = _Paths.ABOUT;
 }
 
 abstract class _Paths {
@@ -33,4 +34,5 @@ abstract class _Paths {
   static const AUTH = '/auth';
   static const OTPVERFICIATION = '/otp-verfication';
   static const SPLASH_SCREEN = '/splash_screen';
+  static const ABOUT = '/about';
 }

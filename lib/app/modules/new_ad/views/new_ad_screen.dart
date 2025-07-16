@@ -62,21 +62,25 @@ class NewAdScreen extends StatelessWidget {
                       initialValue: controller.selectedYear,
                     ),
                     const SizedBox(height: 16),
-                    CustomSearchableDropdown<String>(
+                    CustomSearchableDropdown<Make>(
                       info: 'الماركة',
-                      items: utilitiesService.makes
-                          .map((e) => e.label['ar'] ?? '')
-                          .toList(),
-                      itemAsString: (item) => item,
+                      // items: utilitiesService.makes
+                      //     .map((e) => e.label['ar'] ?? '')
+                      //     .toList(),
+                      items: utilitiesService.makes.toList(),
+                      itemAsString: (item) =>
+                          '${item.label.ar} - ${item.label.en}',
                       onChanged: (value) {
-                        controller.selectedMake = value;
+                        controller.selectedMake = value?.label.ar;
 
-                        final selectedKey = utilitiesService.makes
-                            .firstWhere((e) => e.label['ar'] == value)
-                            .id
-                            .toString();
+                        // final selectedKey = utilitiesService.makes
+                        //     .firstWhere((e) => e.label['ar'] == value)
+                        //     .id
+                        //     .toString();
 
-                        controller.selectedMakeID = selectedKey;
+                        controller.selectedMakeID = value?.id.toString();
+                        // print(
+                        //     "controller.selectedMakeID : ${controller.selectedMakeID}");
                         controller.clearModelFiled();
                       },
                       // initialValue: controller.selectedMake,
@@ -86,30 +90,29 @@ class NewAdScreen extends StatelessWidget {
                     GetBuilder<NewAdController>(
                       id: 'model',
                       builder: (controller) {
-                        // print(controller.selectedModel);
                         return CustomSearchableDropdown<Make>(
                           info: 'المودل',
                           fetchItems: (filter) async {
                             var allItems = await controller
                                 .fetchModels(controller.selectedMakeID ?? '');
                             var items = allItems
-                                .where((item) => (item.label['ar'] ?? '')
+                                .where((item) => (item.label.ar ?? '')
                                     .toLowerCase()
                                     .contains(filter?.toLowerCase() ?? ''))
                                 .toList();
                             return items;
                           },
-                          itemAsString: (make) => make.label['ar']!,
+                          itemAsString: (make) =>
+                              "${make.label.ar} - ${make.label.en}",
                           onChanged: (selectedMake) {
-                            controller.selectedModel =
-                                selectedMake?.label['ar'];
+                            controller.selectedModel = selectedMake?.label.ar;
                             // print(
                             //     "selected make: ${selectedMake?.name} || id: ${selectedMake?.id}");
                             controller.selectedModelID =
                                 selectedMake?.id.toString();
                           },
                           customFilterFn: (item, filter) {
-                            return (item.label['ar'] ?? '')
+                            return (item.label.ar)
                                 .toLowerCase()
                                 .contains(filter.toLowerCase());
                           },
@@ -144,7 +147,7 @@ class NewAdScreen extends StatelessWidget {
                     CustomRadioSelection<String>(
                       info: 'نوع الهيكل',
                       items: utilitiesService.bodyTypes
-                          .map((e) => e.name['ar'] ?? '')
+                          .map((e) => e.name.ar)
                           .toList(),
                       itemAsString: (item) => item,
                       onChanged: (value) {
@@ -220,7 +223,7 @@ class NewAdScreen extends StatelessWidget {
                     CustomRadioSelection<String>(
                       info: 'المواصفات الإقليمية',
                       items: utilitiesService.regionalSpecs
-                          .map((e) => e.label['ar'] ?? '')
+                          .map((e) => e.label.ar)
                           .toList(),
                       itemAsString: (item) => item,
                       onChanged: (value) {
@@ -281,10 +284,11 @@ class NewAdScreen extends StatelessWidget {
                     minLines: 1,
                     // initialValue: advertisement?.address,
                   ),
+                  const SizedBox(height: 16),
                   CustomSearchableDropdown<String>(
                     info: 'المقاطعة',
                     items: utilitiesService.provinces
-                        .map((e) => e.name['ar'] ?? '')
+                        .map((e) => e.name.ar)
                         .toList(),
                     itemAsString: (item) => item,
                     onChanged: (value) {

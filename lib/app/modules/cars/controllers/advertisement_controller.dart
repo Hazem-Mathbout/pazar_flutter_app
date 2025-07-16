@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -54,7 +56,7 @@ class AdvertisementController extends GetxController {
       };
 
       final Map<String, String>? filterParams = filter?.toQueryParams();
-      print("filter param: $filterParams");
+      log("filter param: $filterParams");
 
       final response = await _dataLayer.get(
         '/advertisements',
@@ -313,6 +315,40 @@ class AdvertisementController extends GetxController {
       (element) => element.id == makeId,
       orElse: () => Make.empty(),
     );
-    return make.label['ar'] ?? 'غير معروف';
+    return make.label.ar ?? 'غير معروف';
+  }
+
+  void resetFilters() {
+    // Reset all filter values
+    filter.update((val) {
+      val?.minPrice = null;
+      val?.maxPrice = null;
+      // val?.condition = null;
+      val?.transmission = null;
+      val?.minYear = null;
+      val?.maxYear = null;
+      val?.minMileage = null;
+      val?.maxMileage = null;
+      val?.fuelType = null;
+      val?.bodyType = null;
+      val?.seats = null;
+      val?.doors = null;
+      val?.makeId = null;
+      val?.modelId = null;
+      val?.province = null;
+      val?.models = null;
+      val?.make = null;
+    });
+
+    // Clear all text controllers
+    minPriceController.clear();
+    maxPriceController.clear();
+    minYearController.clear();
+    maxYearController.clear();
+    minMileageController.clear();
+    maxMileageController.clear();
+
+    // Optional: Force UI update if needed
+    update();
   }
 }

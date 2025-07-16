@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pazar/app/core/values/colors.dart';
-import 'package:pazar/app/routes/app_pages.dart';
+import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
 import 'package:pazar/app/shared/widgets/custom_input_filed.dart';
 import 'package:pazar/app/shared/widgets/primary_button.dart';
 
 class OtpVerficiationScreen extends StatelessWidget {
-  const OtpVerficiationScreen({super.key});
+  OtpVerficiationScreen({super.key});
+  final authController = Get.find<AuthController>();
+  final textEditingControllerOTP = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class OtpVerficiationScreen extends StatelessWidget {
               padding: EdgeInsets.zero,
               iconSize: 20,
               onPressed: () {
+                Get.back();
                 // Navigator.pop(context);
               },
               icon: const Icon(Icons.close),
@@ -92,7 +95,7 @@ class OtpVerficiationScreen extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      "لقد أرسلنا لك رقمًا مكونًا من 6 أرقام إلى بريدك الإلكتروني",
+                      "لقد أرسلنا لك كوداً مكونًا من 4 أرقام إلى رقم الواتساب الخاص بك",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -105,14 +108,21 @@ class OtpVerficiationScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 24.0),
-              const CustomInputField(info: 'رمز التحقق'),
+              CustomInputField(
+                info: 'رمز التحقق',
+                controller: textEditingControllerOTP,
+                textDirection: TextDirection.ltr,
+              ),
               const SizedBox(height: 24.0),
               SizedBox(
                 width: double.infinity,
                 child: PrimaryButton(
                   text: 'متابعة',
-                  onPressed: () {
-                    Get.offAllNamed(Routes.CARS);
+                  onPressed: () async {
+                    await authController.verifyOTP(
+                      textEditingControllerOTP.text.trim(),
+                    );
+                    // Get.offAllNamed(Routes.CARS);
                   },
                 ),
               ),
@@ -120,17 +130,31 @@ class OtpVerficiationScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: const Text(
-                      "إعادة الإرسال",
-                      style: TextStyle(
-                        fontSize: 14,
-                        height: 20 / 14,
-                        letterSpacing: 0.0,
-                        color: AppColors.foregroundBrand,
-                        fontWeight: FontWeight.w400,
-                      ),
+                  Obx(
+                    () => GestureDetector(
+                      onTap: authController.isSendingOTP.value
+                          ? null
+                          : () async {
+                              await authController.sendOTP(
+                                authController.phoneController.text,
+                              );
+                            },
+                      child: authController.isSendingOTP.value
+                          ? const SizedBox(
+                              height: 35,
+                              width: 35,
+                              child: CircularProgressIndicator(),
+                            )
+                          : const Text(
+                              "إعادة الإرسال",
+                              style: TextStyle(
+                                fontSize: 14,
+                                height: 20 / 14,
+                                letterSpacing: 0.0,
+                                color: AppColors.foregroundBrand,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
                     ),
                   ),
                 ],

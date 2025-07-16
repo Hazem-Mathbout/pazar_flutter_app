@@ -8,6 +8,7 @@ class ScrollableTextArea extends StatelessWidget {
   final TextInputType? textInputType;
   final void Function(String)? onChanged;
   final FocusNode? focusNode;
+  final TextDirection? textDirection;
 
   const ScrollableTextArea({
     super.key,
@@ -17,6 +18,7 @@ class ScrollableTextArea extends StatelessWidget {
     this.textInputType = TextInputType.multiline,
     this.onChanged,
     this.focusNode,
+    this.textDirection,
   });
 
   @override
@@ -28,6 +30,7 @@ class ScrollableTextArea extends StatelessWidget {
     final textField = TextField(
       controller: controller,
       focusNode: node,
+      textDirection: textDirection,
       scrollController: isMultiline ? scrollController : null,
       maxLines: maxLines,
       minLines: minLines,

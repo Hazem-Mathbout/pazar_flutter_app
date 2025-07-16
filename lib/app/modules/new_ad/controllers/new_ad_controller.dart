@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,9 +7,12 @@ import 'package:pazar/app/core/utilities_service.dart';
 import 'package:pazar/app/data/data_layer.dart';
 import 'package:pazar/app/data/models/advertisement_model.dart';
 import 'package:pazar/app/data/models/utilities_models.dart';
+import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
 import 'package:pazar/app/modules/car_details/controllers/car_details_controller.dart';
+import 'package:pazar/app/modules/menu/views/widgets/edit_account_info_sheet.dart';
 import 'package:pazar/app/modules/my_ads/controllers/my_ads_controller.dart';
 import 'package:pazar/app/modules/new_ad/controllers/edit_ad_images_controller.dart';
+import 'package:pazar/app/routes/app_pages.dart';
 import 'package:pazar/app/shared/utils/error_handler.dart';
 import 'package:pazar/app/shared/utils/toast_loading.dart';
 
@@ -79,48 +83,65 @@ class NewAdController extends GetxController {
 
   void initFileds(Advertisement ad) {
     // Dropdown selections
+
     selectedYear = ad.year.toString();
-    selectedModel = null; // ad.model.name;
+    // selectedModel = null;
+    selectedModel = ad.model.name;
     selectedMake = ad.make.name;
-    // selectedMake = utilitiesService.makes
-    //     .firstWhere(
-    //       (element) => element.name == ad.make.name,
-    //       orElse: () => Make.empty(),
-    //     )
-    //     .label['ar'];
-    selectedFuelType = ad.getFuelTypeLabel(ad.fuelType)?.ar;
-    selectedTransmission = ad.getTransmissions(ad.transmission)?.ar;
+
+    selectedFuelType = ad.getFuelTypeLabel(ad.fuelType)?.ar ?? 'غير محدد';
+    selectedTransmission =
+        ad.getTransmissions(ad.transmission)?.ar ?? 'غير محدد';
+
     selectedBodyType = utilitiesService.bodyTypes
-        .firstWhere(
-          (element) => element.key == ad.bodyType,
-          // orElse: () => ,
-        )
-        .name['ar'];
+            .firstWhere(
+              (element) => element.key == ad.bodyType,
+              orElse: () => BodyType(
+                  key: '', name: LocalizedText(ar: 'غير محدد', en: 'unknown')),
+            )
+            .name
+            .ar ??
+        'غير محدد';
+
     selectedInteriorColor = utilitiesService.interiorColors
-        .firstWhere(
-          (element) => element.key == ad.interiorColor,
-          // orElse: () => ,
-        )
-        .name['ar'];
+            .firstWhere(
+              (element) => element.key == ad.interiorColor,
+              orElse: () =>
+                  ColorItem(key: '', name: {'ar': 'غير محدد'}, hex: ''),
+            )
+            .name['ar'] ??
+        'غير محدد';
+
     selectedExteriorColor = utilitiesService.exteriorColors
-        .firstWhere(
-          (element) => element.key == ad.exteriorColor,
-          // orElse: () => ,
-        )
-        .name['ar'];
+            .firstWhere(
+              (element) => element.key == ad.exteriorColor,
+              orElse: () =>
+                  ColorItem(key: '', name: {'ar': 'غير محدد'}, hex: ''),
+            )
+            .name['ar'] ??
+        'غير محدد';
+
     selectedRegionalSpecs = utilitiesService.regionalSpecs
-        .firstWhere(
-          (element) => element.key == ad.regionalSpecs,
-          // orElse: () => ,
-        )
-        .label['ar'];
-    selectedCarStatus = ad.getConditions(ad.condition)?.ar;
+            .firstWhere(
+              (element) => element.key == ad.regionalSpecs,
+              orElse: () => RegionalSpecs(
+                  key: '', label: LocalizedText(ar: 'غير محدد', en: 'unknown')),
+            )
+            .label
+            .ar ??
+        'غير محدد';
+
+    selectedCarStatus = ad.getConditions(ad.condition)?.ar ?? 'غير محدد';
+
     selectedProvinc = utilitiesService.provinces
-        .firstWhere(
-          (element) => element.key == ad.province,
-          // orElse: () => ,
-        )
-        .name['ar'];
+            .firstWhere(
+              (element) => element.key == ad.province,
+              orElse: () => Province(
+                  key: '', name: LocalizedText(ar: 'غير محدد', en: 'unknown')),
+            )
+            .name
+            .ar ??
+        'غير محدد';
 
     // May be used to fetch models based on selected make
     selectedMakeID = ad.make.id.toString();
@@ -131,15 +152,16 @@ class NewAdController extends GetxController {
     priceController.text = ad.price;
     mileageController.text = ad.mileage;
     addressController.text = ad.address;
-    seatsController.text = ad.seats ?? '';
-    doorsController.text = ad.doors;
+    seatsController.text = ad.seats?.toString() ?? '';
+    doorsController.text = ad.doors.toString();
 
     update();
+    update(['model']);
   }
 
   Future<List<Make>> fetchModels(String make) async {
     print("make model is: $make/models");
-    if (make.isEmpty) {
+    if (make.isEmpty || make == "-1") {
       return [];
     }
     try {
@@ -158,6 +180,21 @@ class NewAdController extends GetxController {
 
   // Submitting the ad
   Future<void> submitAd() async {
+    AuthController authController = Get.find<AuthController>();
+    if (authController.userModel.value != null) {
+      if (authController.userModel.value!.whatsappNumber.isEmpty) {
+        Get.snackbar('رقم الجوال', 'يرجى التحقق من رقم الجوال');
+        await Get.to(
+          () => EditInfoSheet(
+            userModel: authController.userModel.value!,
+          ),
+        );
+        return;
+      }
+    } else {
+      Get.toNamed(Routes.AUTH);
+      return;
+    }
     // Validate the Fields values.
     final result = await validateCarForm(
       selectedYear: selectedYear,
@@ -217,7 +254,7 @@ class NewAdController extends GetxController {
           .en
           .toLowerCase(), // selectedFuelType ?? '',
       'body_type': utilitiesService.bodyTypes
-          .firstWhere((e) => e.name['ar'] == selectedBodyType)
+          .firstWhere((e) => e.name.ar == selectedBodyType)
           .key, // selectedBodyType ?? '',
 
       'interior_color': utilitiesService.interiorColors
@@ -228,11 +265,11 @@ class NewAdController extends GetxController {
           .key, // selectedExteriorColor ?? '',
 
       'regional_specs': utilitiesService.regionalSpecs
-          .firstWhere((e) => e.label['ar'] == selectedRegionalSpecs)
+          .firstWhere((e) => e.label.ar == selectedRegionalSpecs)
           .key, // selectedRegionalSpecs ?? '',
 
       'province': utilitiesService.provinces
-          .firstWhere((e) => e.name['ar'] == selectedProvinc)
+          .firstWhere((e) => e.name.ar == selectedProvinc)
           .key, // selectedProvinc ?? '',
     };
     // Remove model_id if it's empty or null
@@ -461,16 +498,20 @@ class NewAdController extends GetxController {
   }) {
     String? resolveProvince(String? name) {
       final province = provinces.firstWhere(
-        (p) => p.name.containsValue(name),
-        orElse: () => Province(key: '', name: {}),
+        (p) => p.name.containsValue(name ?? 'غير محدد'),
+        orElse: () => Province(
+            key: '', name: LocalizedText(ar: 'غير محدد', en: 'unknown')),
       );
       return province.key.isNotEmpty ? province.key : name;
     }
 
     String? resolveMakes(String? name) {
       final make = makes.firstWhere(
-        (p) => p.label.containsValue(name),
-        orElse: () => Make(id: 0, name: '', label: {}),
+        (p) => p.label.containsValue(name ?? ''),
+        orElse: () => Make(
+            id: 0,
+            name: '',
+            label: LocalizedText(ar: 'غير محدد', en: 'unknown')),
       );
       return make.name.isNotEmpty ? make.name : name;
     }
@@ -485,8 +526,9 @@ class NewAdController extends GetxController {
 
     String? resolveBodyType(String? name) {
       final body = bodyTypes.firstWhere(
-        (b) => b.name.containsValue(name),
-        orElse: () => BodyType(key: '', name: {}),
+        (b) => b.name.containsValue(name ?? ''),
+        orElse: () => BodyType(
+            key: '', name: LocalizedText(ar: 'غير محدد', en: 'unknown')),
       );
       return body.key.isNotEmpty ? body.key : name;
     }

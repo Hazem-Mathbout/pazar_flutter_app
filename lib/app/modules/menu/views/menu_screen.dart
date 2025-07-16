@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pazar/app/core/utilities_service.dart';
 import 'package:pazar/app/core/values/colors.dart';
+import 'package:pazar/app/data/models/utilities_models.dart';
 import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
 import 'package:pazar/app/modules/cars/controllers/home_controller.dart';
+import 'package:pazar/app/modules/menu/views/page_detail_screen.dart';
 import 'package:pazar/app/modules/menu/views/widgets/change_password_sheet.dart';
 import 'package:pazar/app/routes/app_pages.dart';
 import 'package:pazar/app/shared/utils/open_whatsapp_to_help.dart';
@@ -12,6 +15,7 @@ import 'widgets/setting_tail.dart';
 class MenuScreen extends GetView<MenuController> {
   MenuScreen({super.key});
   final authController = Get.find<AuthController>();
+  final utilityServices = Get.find<UtilitiesService>();
 
   @override
   Widget build(BuildContext context) {
@@ -241,22 +245,25 @@ class MenuScreen extends GetView<MenuController> {
               SettingsTile(
                 iconImage: 'assets/icons/brand-whatsapp.png',
                 title: 'تواصل معنا',
-                onTap: () => openWhatsApp(phoneNumber: ''),
-              ),
-              SettingsTile(
-                iconImage: 'assets/icons/info-circle.png',
-                title: 'عن بازار',
-                onTap: () {
-                  print('Navigating to settings');
+                onTap: () async {
+                  await openWhatsApp(
+                      fromUrl: utilityServices.whatsappContactUrl);
                 },
               ),
-              SettingsTile(
-                iconImage: 'assets/icons/list-check.png',
-                title: 'الأحكام والشروط',
-                onTap: () {
-                  print('Navigating to settings');
-                },
-              ),
+              // SettingsTile(
+              //   iconImage: 'assets/icons/info-circle.png',
+              //   title: 'عن بازار',
+              //   onTap: () {},
+              // ),
+              // SettingsTile(
+              //   iconImage: 'assets/icons/list-check.png',
+              //   title: 'الأحكام والشروط',
+              //   onTap: () {
+              //     print('Navigating to settings');
+              //   },
+              // ),
+              ...buildPageTiles(utilityServices.pages, context),
+
               Obx(
                 () => SettingsTile(
                   iconImage: authController.userModel.value != null
@@ -280,5 +287,33 @@ class MenuScreen extends GetView<MenuController> {
         ),
       ),
     );
+  }
+
+  List<Widget> buildPageTiles(List<PageItem> pages, BuildContext context) {
+    return pages
+        .map((page) => SettingsTile(
+              iconImage: _getIconForPage(page.slug),
+              title: page.title.ar,
+              onTap: () {
+                // Navigate to page details
+                Get.to(() => PageDetailScreen(page: page));
+              },
+            ))
+        .toList();
+  }
+
+// Helper method to get appropriate icon for each page slug
+  String _getIconForPage(String slug) {
+    switch (slug) {
+      case 'about':
+        return 'assets/icons/info-circle.png';
+      case 'privacy':
+        return 'assets/icons/shield-lock.png';
+      case 'terms':
+        return 'assets/icons/list-check.png';
+      // Add more cases as needed
+      default:
+        return 'assets/icons/file-info.png';
+    }
   }
 }

@@ -64,17 +64,20 @@ class CarDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Car make and model
-            Padding(
-              padding: const EdgeInsets.only(right: 24.0, top: 8.0),
-              child: Text(
-                car.model.name.isNotEmpty
-                    ? "${controller.carDetails['المصنع']} - ${car.model.name}"
-                    : controller.carDetails['المصنع'],
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 24.0, top: 8.0),
+                child: Text(
+                  car.modelFullName.ar,
+                  // car.model.name.isNotEmpty
+                  //     ? "${controller.carDetails['المصنع']} - ${car.model.name}"
+                  //     : controller.carDetails['المصنع'],
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  // overflow: TextOverflow.ellipsis,
                 ),
-                overflow: TextOverflow.ellipsis,
               ),
             ),
 
@@ -186,7 +189,8 @@ class CarDetailsScreen extends StatelessWidget {
                           .firstWhere(
                             (element) => element.key == car.bodyType,
                           )
-                          .name['ar'] ??
+                          .name
+                          .ar ??
                       'غير محدد',
                 ),
               ]

@@ -1,7 +1,9 @@
+import 'package:pazar/app/data/models/advertisement_model.dart';
+
 class Make {
   final int id;
   final String name;
-  final Map<String, String> label;
+  final LocalizedText label;
 
   Make({
     required this.id,
@@ -13,7 +15,7 @@ class Make {
     return Make(
       id: json['id'],
       name: json['name'] ?? '',
-      label: Map<String, String>.from(json['label'] ?? {}),
+      label: LocalizedText.fromJson(json['label'] ?? {}),
     );
   }
 
@@ -29,7 +31,7 @@ class Make {
     return Make(
       id: -1,
       name: '',
-      label: {},
+      label: LocalizedText(ar: '', en: ''),
     );
   }
 
@@ -54,6 +56,15 @@ class ColorItem {
     required this.hex,
   });
 
+  // Add this empty factory constructor
+  factory ColorItem.empty() {
+    return ColorItem(
+      key: '',
+      name: {'ar': 'غير محدد'}, // Arabic default text
+      hex: '',
+    );
+  }
+
   factory ColorItem.fromJson(Map<String, dynamic> json) {
     return ColorItem(
       key: json['key'] ?? '',
@@ -74,7 +85,7 @@ class ColorItem {
 
 class BodyType {
   final String key;
-  final Map<String, String> name;
+  final LocalizedText name;
 
   BodyType({
     required this.key,
@@ -84,7 +95,7 @@ class BodyType {
   factory BodyType.fromJson(Map<String, dynamic> json) {
     return BodyType(
       key: json['key'] ?? '',
-      name: Map<String, String>.from(json['name'] ?? {}),
+      name: LocalizedText.fromJson(json['name'] ?? {}),
     );
   }
 
@@ -100,7 +111,7 @@ class BodyType {
 
 class Province {
   final String key;
-  final Map<String, String> name;
+  final LocalizedText name;
 
   Province({
     required this.key,
@@ -110,7 +121,7 @@ class Province {
   factory Province.fromJson(Map<String, dynamic> json) {
     return Province(
       key: json['key'] ?? '',
-      name: Map<String, String>.from(json['name'] ?? {}),
+      name: LocalizedText.fromJson(json['name'] ?? {}),
     );
   }
 
@@ -126,10 +137,9 @@ class Province {
 
 class PageItem {
   final int id;
-  final Map<String, String> title;
+  final LocalizedText title;
   final String slug;
-  final Map<String, String>
-      body; // Adjust if you later define structure for `body`
+  final LocalizedText body;
 
   PageItem({
     required this.id,
@@ -141,16 +151,16 @@ class PageItem {
   factory PageItem.fromJson(Map<String, dynamic> json) {
     return PageItem(
       id: json['id'] ?? 0,
-      title: Map<String, String>.from(json['title'] ?? {}),
+      title: LocalizedText.fromJson(json['title'] ?? {}),
       slug: json['slug'] ?? '',
-      body: Map<String, String>.from(json['body'] ?? {}),
+      body: LocalizedText.fromJson(json['body'] ?? {}),
     );
   }
 }
 
 class RegionalSpecs {
   final String key;
-  final Map<String, String> label;
+  final LocalizedText label;
 
   RegionalSpecs({
     required this.key,
@@ -160,7 +170,7 @@ class RegionalSpecs {
   factory RegionalSpecs.fromJson(Map<String, dynamic> json) {
     return RegionalSpecs(
       key: json['key'] ?? '',
-      label: Map<String, String>.from(json['label'] ?? {}),
+      label: LocalizedText.fromJson(json['label'] ?? {}),
     );
   }
 

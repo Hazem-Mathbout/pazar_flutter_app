@@ -29,7 +29,7 @@ class CarsScreen extends StatelessWidget {
         child: CustomScrollView(
           controller: homeScrollController,
           slivers: [
-            const SliverToBoxAdapter(child: FilterSortBar()),
+            SliverToBoxAdapter(child: FilterSortBar()),
             const SliverToBoxAdapter(child: CategoryTabs()),
             SliverPadding(
               padding:

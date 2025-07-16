@@ -33,32 +33,41 @@ class CarDetailsController extends GetxController {
   Map<String, dynamic> get carDetails {
     final car = carInfo.value;
     if (car == null) return {};
-    // print(car.make.name);
+    print("car.make.id: ${car.make.id}");
+
     return {
-      // "المصنع" : car.make.name
       "المصنع": utilitiesService.makes
               .firstWhere(
                 (element) => element.name == car.make.name,
                 orElse: () => Make.empty(),
               )
-              .label['ar'] ??
+              .label
+              .ar ??
           'غير محدد',
-      "الفئة": car.model.name,
-      "الموديل": car.year.toString(),
+      "الفئة": car.model.name ?? 'غير محدد',
+      "الموديل": car.year.toString() ?? 'غير محدد',
       "نوع الجسم": utilitiesService.bodyTypes
               .firstWhere(
                 (element) => element.key == car.bodyType,
+                orElse: () => BodyType(
+                    key: '',
+                    name: LocalizedText(ar: 'غير محدد', en: 'unknown')),
               )
-              .name['ar'] ??
+              .name
+              .ar ??
           'غير محدد',
       "عدد المقاعد": car.seats?.toString() ?? "غير محدد",
-      "عدد الأبواب": car.doors,
+      "عدد الأبواب": car.doors.toString() ?? "غير محدد",
       "الحالة": car.condition == 'new' ? 'جديد' : 'مستعمل',
       "المواصفات الإقليمية": utilitiesService.regionalSpecs
               .firstWhere(
                 (element) => element.key == car.regionalSpecs,
+                orElse: () => RegionalSpecs(
+                    key: '',
+                    label: LocalizedText(ar: 'غير محدد', en: 'unknown')),
               )
-              .label['ar'] ??
+              .label
+              .ar ??
           'غير محدد',
     };
   }
@@ -66,25 +75,24 @@ class CarDetailsController extends GetxController {
   Map<String, String> get carFeatures {
     final car = carInfo.value;
     if (car == null) return {};
+
     return {
-      "نوع الوقود": car.getFuelTypeLabel(car.fuelType)!.ar,
-      "نقل الحركة": car.metaLabels!.transmission!.ar,
+      "نوع الوقود": car.getFuelTypeLabel(car.fuelType)?.ar ?? 'غير محدد',
+      "نقل الحركة": car.metaLabels?.transmission?.ar ?? 'غير محدد',
       "لون الخارج": utilitiesService.exteriorColors
               .firstWhere(
                 (element) => element.key == car.exteriorColor,
+                orElse: () => ColorItem.empty(),
               )
               .name['ar'] ??
           'غير محدد',
       "لون الداخل": utilitiesService.interiorColors
               .firstWhere(
                 (element) => element.key == car.interiorColor,
+                orElse: () => ColorItem.empty(),
               )
               .name['ar'] ??
           'غير محدد',
-
-      // "العنوان": car.metaLabels!.location!.ar,
-      // "الحالة": car.status,
-      // "المشاهدات": car.viewsCount.toString(),
     };
   }
 

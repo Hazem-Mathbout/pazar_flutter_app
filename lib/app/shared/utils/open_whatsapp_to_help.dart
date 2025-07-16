@@ -18,11 +18,18 @@
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Future<void> openWhatsApp(
-    {required String phoneNumber, String? message}) async {
+Future<void> openWhatsApp({
+  String? phoneNumber,
+  String? message,
+  String? fromUrl,
+}) async {
   try {
+    if (fromUrl != null) {
+      await launchUrl(Uri.parse(fromUrl), mode: LaunchMode.externalApplication);
+      return;
+    }
     final String formattedPhone =
-        phoneNumber.replaceAll(RegExp(r'\D'), ''); // Remove non-digits
+        phoneNumber!.replaceAll(RegExp(r'\D'), ''); // Remove non-digits
     final String encodedMessage = Uri.encodeComponent(message ?? '');
     final Uri whatsappUri = Uri.parse(
       'https://wa.me/$formattedPhone${message != null ? '?text=$encodedMessage' : ''}',

@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import 'package:pazar/app/core/utilities_service.dart';
 import 'package:pazar/app/routes/app_pages.dart';
 
 class DataLayer extends GetxService {
-  static const String _baseUrl = 'https://bazar-dev.amrhajjouz.com/api';
+  // static const String _baseUrl = 'https://bazar-dev.amrhajjouz.com/api';
+  static const String _baseUrl = 'https://api.pazarcom.com/api';
   late dio.Dio _dio;
 
   String? _token;
@@ -31,10 +34,15 @@ class DataLayer extends GetxService {
   Future<dio.Response<dynamic>> get(String endpoint,
       {Map<String, dynamic>? queryParameters}) async {
     _guardProtectedRoute(endpoint, 'get');
+
+    final cleanedParams = _cleanQueryParameters(queryParameters);
+
+    log('Cleaned queryParameters: $cleanedParams');
+
     try {
       final dio.Response response = await _dio.get(
         endpoint,
-        queryParameters: queryParameters,
+        queryParameters: cleanedParams,
         options: _buildHeaders(endpoint, 'get'),
       );
       return response;
@@ -182,5 +190,19 @@ class DataLayer extends GetxService {
     if (patterns == null) return false;
 
     return patterns.any((pattern) => pattern.hasMatch(endpoint));
+  }
+
+  Map<String, dynamic> _cleanQueryParameters(Map<String, dynamic>? parameters) {
+    if (parameters == null) return {};
+
+    // Create a new map without empty values
+    return Map.from(parameters)
+      ..removeWhere((key, value) {
+        // Remove if value is null, empty string, or empty list/map
+        return value == null ||
+            (value is String && value.isEmpty) ||
+            (value is Iterable && value.isEmpty) ||
+            (value is Map && value.isEmpty);
+      });
   }
 }

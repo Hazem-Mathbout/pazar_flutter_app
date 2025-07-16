@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -40,6 +42,7 @@ class MyAdsController extends GetxController {
         },
       );
 
+      log("response.data: ${response.data}");
       if (response.statusCode == 200) {
         final List<Advertisement> newItems = List<Advertisement>.from(
           response.data['data'].map((e) => Advertisement.fromJson(e)),

@@ -164,6 +164,8 @@
 
 import 'dart:developer';
 
+import 'package:get/get.dart';
+import 'package:pazar/app/core/utilities_service.dart';
 import 'package:pazar/app/data/models/utilities_models.dart';
 import 'package:pazar/app/shared/utils/validate_json_types.dart';
 
@@ -490,8 +492,8 @@ class LocalizedText {
 
   factory LocalizedText.fromJson(Map<String, dynamic> json) {
     return LocalizedText(
-      ar: json['ar'],
-      en: json['en'],
+      ar: json['ar'] ?? 'غير محدد',
+      en: json['en'] ?? 'unknown',
     );
   }
 
@@ -499,25 +501,127 @@ class LocalizedText {
         'ar': ar,
         'en': en,
       };
+
+  /// Checks if the given [value] matches either the Arabic or English text
+  /// [ignoreCase] if true, performs case-insensitive comparison
+  /// [trimWhitespace] if true, trims both strings before comparison
+  bool containsValue(String value,
+      {bool ignoreCase = true, bool trimWhitespace = true}) {
+    String processedValue = trimWhitespace ? value.trim() : value;
+    String processedAr = trimWhitespace ? ar.trim() : ar;
+    String processedEn = trimWhitespace ? en.trim() : en;
+
+    if (ignoreCase) {
+      return processedAr.toLowerCase().contains(processedValue.toLowerCase()) ||
+          processedEn.toLowerCase().contains(processedValue.toLowerCase());
+    }
+
+    return processedAr.contains(processedValue) ||
+        processedEn.contains(processedValue);
+  }
 }
 
 class MetaLabelOptions {
-  static List<LocalizedText> fuelTypes = [
-    LocalizedText(ar: 'بنزين', en: 'Petrol'),
-    LocalizedText(ar: 'ديزل', en: 'Diesel'),
-    LocalizedText(ar: 'كهرباء', en: 'Electric'),
-    LocalizedText(ar: 'هايبرد', en: 'Hybrid'),
-    LocalizedText(ar: 'غاز', en: 'Gas'),
-  ];
+  static UtilitiesService get _utility => Get.find<UtilitiesService>();
 
-  static List<LocalizedText> transmissions = [
-    LocalizedText(ar: 'يدوي', en: 'Manual'),
-    LocalizedText(ar: 'أوتوماتيكي', en: 'Automatic'),
-    LocalizedText(ar: 'شبه أوتوماتيكي', en: 'Semi-Automatic'),
-  ];
+  // Fuel Types - Dynamic with fallback
+  static List<LocalizedText> get fuelTypes {
+    return
+        // _utility.fuelTypes.isNotEmpty
+        //     ? _utility.fuelTypes
+        //         .map(
+        //             (f) => LocalizedText(ar: f.name.ar, en: f.name.en ?? f.name.ar))
+        //         .toList()
+        //     :
+        [
+      LocalizedText(ar: 'بنزين', en: 'Petrol'),
+      LocalizedText(ar: 'ديزل', en: 'Diesel'),
+      LocalizedText(ar: 'كهرباء', en: 'Electric'),
+      LocalizedText(ar: 'هايبرد', en: 'Hybrid'),
+      LocalizedText(ar: 'غاز', en: 'Gas'),
+    ];
+  }
 
-  static List<LocalizedText> conditions = [
-    LocalizedText(ar: 'جديد', en: 'New'),
-    LocalizedText(ar: 'مستعمل', en: 'Used'),
-  ];
+  // Transmissions - Dynamic with fallback
+  static List<LocalizedText> get transmissions {
+    return
+        // _utility.transmissions.isNotEmpty
+        //     ? _utility.transmissions
+        //         .map(
+        //             (t) => LocalizedText(ar: t.name.ar, en: t.name.en ?? t.name.ar))
+        //         .toList()
+        //     :
+        [
+      LocalizedText(ar: 'يدوي', en: 'Manual'),
+      LocalizedText(ar: 'أوتوماتيكي', en: 'Automatic'),
+      LocalizedText(ar: 'شبه أوتوماتيكي', en: 'Semi-Automatic'),
+    ];
+  }
+
+  // Conditions - Static (usually doesn't change)
+  static List<LocalizedText> get conditions => [
+        LocalizedText(ar: 'جديد', en: 'New'),
+        LocalizedText(ar: 'مستعمل', en: 'Used'),
+      ];
+
+  // Body Types - Dynamic with fallback
+  static List<LocalizedText> get bodyTypes {
+    return _utility.bodyTypes.isNotEmpty
+        ? _utility.bodyTypes.map((b) => b.name).toList()
+        : [
+            LocalizedText(ar: 'سيدان', en: 'Sedan'),
+            LocalizedText(ar: 'دفع رباعي', en: 'SUV'),
+            LocalizedText(ar: 'كوبيه', en: 'Coupe'),
+            LocalizedText(ar: 'هايبرد', en: 'Hatchback'),
+          ];
+  }
+
+  // Makes - Dynamic with fallback
+  static List<LocalizedText> get makes {
+    return _utility.makes.isNotEmpty
+        ? _utility.makes.map((m) => m.label).toList()
+        : [
+            LocalizedText(ar: 'تويوتا', en: 'Toyota'),
+            LocalizedText(ar: 'هوندا', en: 'Honda'),
+            LocalizedText(ar: 'نيسان', en: 'Nissan'),
+          ];
+  }
+
+  // Provinces - Dynamic with fallback
+  static List<LocalizedText> get provinces {
+    return _utility.provinces.isNotEmpty
+        ? _utility.provinces.map((p) => p.name).toList()
+        : [
+            LocalizedText(ar: 'دمشق', en: 'Damascus'),
+            LocalizedText(ar: 'حلب', en: 'Aleppo'),
+            LocalizedText(ar: 'اللاذقية', en: 'Latakia'),
+          ];
+  }
+
+  // Seat Options - Static
+  static List<LocalizedText> get seatOptions => [
+        LocalizedText(ar: '2', en: '2'),
+        LocalizedText(ar: '4', en: '4'),
+        LocalizedText(ar: '5', en: '5'),
+        LocalizedText(ar: '7', en: '7'),
+        LocalizedText(ar: '8+', en: '8+'),
+      ];
+
+  // Door Options - Static
+  static List<LocalizedText> get doorOptions => [
+        LocalizedText(ar: '2', en: '2'),
+        LocalizedText(ar: '4', en: '4'),
+        LocalizedText(ar: '5', en: '5'),
+      ];
+
+  // Regional Specs - Dynamic with fallback
+  static List<LocalizedText> get regionalSpecs {
+    return _utility.regionalSpecs.isNotEmpty
+        ? _utility.regionalSpecs.map((r) => r.label).toList()
+        : [
+            LocalizedText(ar: 'خليجي', en: 'GCC'),
+            LocalizedText(ar: 'أوروبي', en: 'European'),
+            LocalizedText(ar: 'أمريكي', en: 'American'),
+          ];
+  }
 }

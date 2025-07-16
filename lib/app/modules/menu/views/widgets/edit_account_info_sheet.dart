@@ -3,10 +3,13 @@ import 'package:get/get.dart';
 import 'package:pazar/app/core/values/colors.dart';
 import 'package:pazar/app/data/models/user_model.dart';
 import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
+// import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
 import 'package:pazar/app/shared/widgets/custom_action_bottom_sheet.dart';
 import 'package:pazar/app/shared/widgets/custom_input_filed.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+
+import 'international_phone_input.dart';
 
 class EditInfoSheet extends StatefulWidget {
   final UserModel userModel;
@@ -23,6 +26,7 @@ class _EditInfoSheetState extends State<EditInfoSheet> {
   // late TextEditingController passwordController;
   late String? currentProfileImgUrl;
   File? newProfileImage;
+  final authController = Get.find<AuthController>();
 
   @override
   void initState() {
@@ -32,7 +36,9 @@ class _EditInfoSheetState extends State<EditInfoSheet> {
     emailController = TextEditingController(text: widget.userModel.email);
     phoneController =
         TextEditingController(text: widget.userModel.whatsappNumber);
-    // passwordController = TextEditingController(text: '********');
+
+    // phoneController = authController.phoneController;
+
     currentProfileImgUrl = widget.userModel.profileImageUrl;
   }
 
@@ -87,107 +93,123 @@ class _EditInfoSheetState extends State<EditInfoSheet> {
           ),
         ),
       ),
-      body: Container(
-        color: Colors.white,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // ⬅️ Wrap height based on content
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Body
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Apply padding only to the top content
-                  Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'الايميل',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            fontFamily: 'Rubik',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            height: 16 / 14,
-                            color: Color(0xFF171717),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Container(
+          color: Colors.white,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // ⬅️ Wrap height based on content
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Body
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Apply padding only to the top content
+                    Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'الصورة الشخصية',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              height: 16 / 14,
+                              color: Color(0xFF171717),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
+                          const SizedBox(height: 8),
 
-                        // Avatar
-                        AvatarWithEditIcon(
-                          profileImageUrl: currentProfileImgUrl,
-                          onImagePicked: (pickedImage) {
-                            newProfileImage =
-                                pickedImage; // You can define newProfileImage in parent
-                          },
-                        ),
+                          // Avatar
+                          AvatarWithEditIcon(
+                            profileImageUrl: currentProfileImgUrl,
+                            onImagePicked: (pickedImage) {
+                              newProfileImage =
+                                  pickedImage; // You can define newProfileImage in parent
+                            },
+                          ),
 
-                        const SizedBox(height: 24),
-                        CustomInputField(
-                          info: 'الأسم',
-                          isDropdown: false,
-                          controller: nameController,
-                          initialValue: widget.userModel.name,
-                        ),
-                        const SizedBox(height: 24),
-                        CustomInputField(
-                          info: 'الإيميل',
-                          isDropdown: false,
-                          controller: emailController,
-                          initialValue: widget.userModel.email,
-                        ),
-                        const SizedBox(height: 24),
-                        CustomInputField(
-                          info: 'رقم الجوال',
-                          textInputType: TextInputType.phone,
-                          isDropdown: false,
-                          controller: phoneController,
-                          initialValue: widget.userModel.whatsappNumber,
-                        ),
-                        // const SizedBox(height: 24),
-                        // CustomInputField(
-                        //   info: 'كلمة المرور',
-                        //   isDropdown: false,
-                        //   controller: passwordController,
-                        // ),
-                      ],
+                          const SizedBox(height: 24),
+                          CustomInputField(
+                            info: 'الأسم',
+                            isDropdown: false,
+                            controller: nameController,
+                            initialValue: widget.userModel.name,
+                          ),
+                          const SizedBox(height: 24),
+                          CustomInputField(
+                            info: 'الإيميل',
+                            isDropdown: false,
+                            controller: emailController,
+                            initialValue: widget.userModel.email,
+                          ),
+                          const SizedBox(height: 24),
+                          // CustomInputField(
+                          //   info: 'رقم الجوال',
+                          //   textInputType: TextInputType.phone,
+                          //   isDropdown: false,
+                          //   controller: phoneController,
+                          //   initialValue: widget.userModel.whatsappNumber,
+                          //   textDirection: TextDirection.ltr,
+                          //   onChanged: (p0) {
+                          //     authController.phoneController.text = p0;
+                          //   },
+                          // ),
+                          InternationalPhoneInput(
+                            label: 'رقم الجوال',
+                            initialValue: widget.userModel.whatsappNumber,
+                            onChanged: (completeNumber) {
+                              // print('Complete phone number: $completeNumber');
+                              authController.phoneController.text =
+                                  completeNumber;
+                              phoneController.text = completeNumber;
+                            },
+                          ),
+
+                          // const SizedBox(height: 24),
+                          // CustomInputField(
+                          //   info: 'كلمة المرور',
+                          //   isDropdown: false,
+                          //   controller: passwordController,
+                          // ),
+                        ],
+                      ),
                     ),
-                  ),
 
-                  // Bottom sheet not inside the padding
-                  CustomActionBottomSheet(
-                    showBorder: true,
-                    isSaveExpanded: false,
-                    onCancel: () {
-                      Get.back();
-                    },
-                    onSave: () async {
-                      final authController = Get.find<AuthController>();
-                      UserModel user = UserModel(
-                        id: widget.userModel.id,
-                        name: nameController.text.trim(),
-                        email: emailController.text.trim(),
-                        whatsappNumber: phoneController.text.trim(),
-                        profileImageUrl: newProfileImage?.path,
-                      );
-                      await authController.updateAuthUser(user);
-                      Get.close(0);
-                    },
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 16,
+                    // Bottom sheet not inside the padding
+                    CustomActionBottomSheet(
+                      showBorder: true,
+                      isSaveExpanded: false,
+                      onCancel: () {
+                        Get.back();
+                      },
+                      onSave: () async {
+                        UserModel user = UserModel(
+                          id: widget.userModel.id,
+                          name: nameController.text.trim(),
+                          email: emailController.text.trim(),
+                          whatsappNumber: phoneController.text.trim(),
+                          profileImageUrl: newProfileImage?.path,
+                        );
+                        await authController.updateAuthUser(user);
+                      },
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -39,7 +39,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.OTPVERFICIATION,
-      page: () => const OtpVerficiationScreen(),
+      page: () => OtpVerficiationScreen(),
     ),
     // GetPage(
     //   name: _Paths.HOME,

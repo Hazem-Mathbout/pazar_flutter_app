@@ -9,6 +9,8 @@ class CustomRadioSelection<T> extends StatefulWidget {
   final void Function(T?)? onChanged;
   final String? hint;
   final bool showDragHandle;
+  final bool
+      showClearButton; // New parameter to control clear button visibility
 
   const CustomRadioSelection({
     super.key,
@@ -19,6 +21,7 @@ class CustomRadioSelection<T> extends StatefulWidget {
     this.onChanged,
     this.hint,
     this.showDragHandle = true,
+    this.showClearButton = false, // Default to true
   });
 
   @override
@@ -34,6 +37,21 @@ class _CustomRadioSelectionState<T> extends State<CustomRadioSelection<T>> {
   void initState() {
     super.initState();
     _selectedItem = widget.initialValue;
+  }
+
+  @override
+  void didUpdateWidget(CustomRadioSelection<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialValue != oldWidget.initialValue) {
+      _selectedItem = widget.initialValue;
+    }
+  }
+
+  void _clearSelection() {
+    setState(() {
+      _selectedItem = null;
+    });
+    widget.onChanged?.call(null);
   }
 
   void _showRadioSelectionSheet(BuildContext context) {
@@ -79,11 +97,7 @@ class _CustomRadioSelectionState<T> extends State<CustomRadioSelection<T>> {
               // Sheet header
               Padding(
                 padding: const EdgeInsets.only(
-                  left: 25,
-                  right: 25,
-                  top: 16,
-                  bottom: 8,
-                ),
+                    left: 25, right: 25, top: 16, bottom: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -94,6 +108,12 @@ class _CustomRadioSelectionState<T> extends State<CustomRadioSelection<T>> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    // Clear button in the sheet (optional)
+                    // if (_selectedItem != null && widget.showClearButton)
+                    //   TextButton(
+                    //     onPressed: _clearSelection,
+                    //     child: const Text('ازالة'),
+                    //   ),
                   ],
                 ),
               ),
@@ -140,17 +160,59 @@ class _CustomRadioSelectionState<T> extends State<CustomRadioSelection<T>> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Label
+        // Label with clear button
         Padding(
           padding: const EdgeInsets.only(bottom: 4.0),
-          child: Text(
-            widget.info,
-            style: const TextStyle(
-              fontFamily: 'Rubik',
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-              height: 1.14,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.info,
+                style: const TextStyle(
+                  fontFamily: 'Rubik',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  height: 1.14,
+                ),
+              ),
+              // Clear button - only visible when there's a selection and showClearButton is true
+              if (_selectedItem != null && widget.showClearButton)
+                GestureDetector(
+                  onTap: _clearSelection,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100], // Lighter background
+                      borderRadius: BorderRadius.circular(16), // More rounded
+                      border: Border.all(
+                        color: Colors.grey[300]!,
+                        width: 0.5,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.close,
+                          size: 14,
+                          color: Colors.grey[600], // Darker icon
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'ازالة',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[800], // Darker text
+                            height: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+            ],
           ),
         ),
 

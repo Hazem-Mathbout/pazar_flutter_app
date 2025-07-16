@@ -12,6 +12,7 @@ class CustomInputField extends StatefulWidget {
   final TextInputType? textInputType;
   final int? minLines;
   final int? maxLines;
+  final TextDirection? textDirection;
 
   const CustomInputField({
     super.key,
@@ -24,6 +25,7 @@ class CustomInputField extends StatefulWidget {
     this.textInputType,
     this.minLines,
     this.maxLines = 1,
+    this.textDirection,
   });
 
   @override
@@ -175,6 +177,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                     textInputType: widget.textInputType,
                     onChanged: widget.onChanged,
                     focusNode: _focusNode,
+                    textDirection: widget.textDirection,
                   ),
           ),
         ),
