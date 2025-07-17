@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:pazar/app/core/utilities_service.dart';
 import 'package:pazar/app/data/models/advertisement_model.dart';
 import 'package:pazar/app/data/models/utilities_models.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CarDetailsController extends GetxController {
   final RxInt currentIndex = 0.obs;
@@ -108,5 +109,22 @@ class CarDetailsController extends GetxController {
       "نوع الحساب":
           "${ad.seller.businessAccount ? "حساب تجاري" : "حساب شخصي"} ${ad.seller.verified ? "✅ موثق" : "❌ غير موثق"}",
     };
+  }
+
+  // Add this method to your class:
+  Future<void> shareCar(String shareUrl) async {
+    try {
+      var param = ShareParams(
+        subject: 'Car Listing on Pazarcom',
+        text: 'Check out this car on Pazarcom: $shareUrl',
+      );
+      await SharePlus.instance.share(param);
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Could not share: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 }

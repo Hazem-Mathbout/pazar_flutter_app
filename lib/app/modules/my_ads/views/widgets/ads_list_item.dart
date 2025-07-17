@@ -4,6 +4,7 @@ import 'package:pazar/app/core/values/colors.dart';
 import 'package:pazar/app/data/models/advertisement_model.dart';
 import 'package:pazar/app/modules/car_details/views/car_details_screen.dart';
 import 'package:pazar/app/modules/my_ads/controllers/my_ads_controller.dart';
+import 'package:pazar/app/modules/new_ad/views/new_ad_screen.dart';
 import 'package:pazar/app/shared/widgets/custom_action_bottom_sheet.dart';
 
 class AdsListItem extends StatelessWidget {
@@ -159,6 +160,34 @@ class AdsListItem extends StatelessWidget {
                               ),
                               PopupMenuItem(
                                 value: 2,
+                                onTap: () async {
+                                  Get.to(
+                                    () => NewAdScreen(
+                                      isEditMode: true,
+                                      advertisement: advertisement,
+                                    ),
+                                  );
+                                  // await myADController
+                                  //     .deleteAD(advertisement.id);
+                                },
+                                child: const Row(
+                                  children: [
+                                    Icon(Icons.edit, color: Colors.black54),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'تعديل',
+                                      style: TextStyle(
+                                        fontFamily: 'Rubik',
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14,
+                                        color: AppColors.foregroundPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 3,
                                 onTap: () async {
                                   await myADController
                                       .deleteAD(advertisement.id);

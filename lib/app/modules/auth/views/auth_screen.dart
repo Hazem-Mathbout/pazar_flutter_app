@@ -88,12 +88,12 @@ class AuthScreen extends StatelessWidget {
                       await authController.signInWithGoogle();
                     },
                   ),
-                  const SizedBox(height: 8),
-                  SocialButton(
-                    text: 'فيسبوك',
-                    iconPath: 'assets/images/facebook.png',
-                    onPressed: () {},
-                  ),
+                  // const SizedBox(height: 8),
+                  // SocialButton(
+                  //   text: 'فيسبوك',
+                  //   iconPath: 'assets/images/facebook.png',
+                  //   onPressed: () {},
+                  // ),
                   const SizedBox(height: 24),
 
                   if (!isLogin) ...[

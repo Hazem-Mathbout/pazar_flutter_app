@@ -68,6 +68,11 @@ class ImageCarouselViewer extends StatelessWidget {
           right: 16,
           child: _buildBackButton(),
         ),
+        // Positioned(
+        //   top: kToolbarHeight,
+        //   left: 16, // Opposite side of back button
+        //   child: _buildShareButton(),
+        // )
       ],
     );
   }

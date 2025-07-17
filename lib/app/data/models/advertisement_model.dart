@@ -199,6 +199,7 @@ class Advertisement {
   final List<ImageMedia> media;
   final MetaLabels? metaLabels;
   bool favoritedByAuth;
+  final String? shareUrl;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -230,6 +231,7 @@ class Advertisement {
     required this.favoritedByAuth,
     this.metaLabels,
     this.regionalSpecs,
+    this.shareUrl,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -307,6 +309,7 @@ class Advertisement {
           : null,
       regionalSpecs: json['regional_specs'],
       favoritedByAuth: json['favorited_by_auth'] ?? false,
+      shareUrl: json['share_url'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
@@ -341,6 +344,7 @@ class Advertisement {
       'images': media.map((m) => m.toJson()).toList(),
       'meta_labels': metaLabels?.toJson(),
       'regional_specs': regionalSpecs,
+      'share_url': shareUrl,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };

@@ -45,7 +45,7 @@ class CarDetailsScreen extends StatelessWidget {
                 _buildDetailSection("عن السيارة", controller.carDetails),
                 _buildDetailSection("الميزات", controller.carFeatures),
                 _buildDetailSection("عن الإعلان", controller.aboutAd),
-                _buildSimilarCars(),
+                // _buildSimilarCars(),
               ],
             ),
           ),
@@ -60,116 +60,111 @@ class CarDetailsScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Car make and model
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 24.0, top: 8.0),
-                child: Text(
-                  car.modelFullName.ar,
-                  // car.model.name.isNotEmpty
-                  //     ? "${controller.carDetails['المصنع']} - ${car.model.name}"
-                  //     : controller.carDetails['المصنع'],
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 24.0, top: 8.0),
+                    child: Text(
+                      car.title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
-                  // overflow: TextOverflow.ellipsis,
-                ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 24.0, top: 8.0),
+                    child: Text(
+                      car.modelFullName.ar,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey.shade600,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  // const SizedBox(height: 16),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(right: 24.0),
+                  //   child: Text(
+                  //     "موديل ${car.year}",
+                  //     style: const TextStyle(
+                  //       fontSize: 16,
+                  //       fontFamily: "Rubik",
+                  //       color: AppColors.foregroundSecondary,
+                  //     ),
+                  //   ),
+                  // ),
+                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 24.0),
+                    child: Text(
+                      '${car.price} \$',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Rubik",
+                        color: AppColors.foregroundPrimary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-
-            // Dropdown actions (favorite & report)
             Padding(
-              padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-              child: Row(
+              padding: const EdgeInsets.only(top: 8.0, left: 8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey
-                          .shade200, // You can customize the background color
-                    ),
-                    child: GetBuilder<AdvertisementController>(
-                      id: car.id.toString(),
-                      builder: (controller) => IconButton(
-                        padding: EdgeInsets.zero,
-                        icon: Icon(
-                          car.favoritedByAuth
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: car.favoritedByAuth
-                              ? Colors.red
-                              : AppColors.foregroundSecondary,
-                          size: 25,
-                        ),
-                        onPressed: () async =>
-                            await advertisementController.toggleFavorite(car),
-                      ),
+                  GetBuilder<AdvertisementController>(
+                    id: 'favorite',
+                    builder: (controller) => _buildActionButton(
+                      icon: car.favoritedByAuth
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: car.favoritedByAuth
+                          ? Colors.red
+                          : AppColors.foregroundSecondary,
+                      onPressed: () async =>
+                          await advertisementController.toggleFavorite(car),
                     ),
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey.shade200,
-                    ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: const Icon(
-                        Icons.report_gmailerrorred_outlined,
-                        color: AppColors.foregroundSecondary,
-                        size: 25,
-                      ),
-                      onPressed: () {
-                        showReportDialog(
-                          Get.context!,
-                          (reason, description) async {
-                            await advertisementController.reportAdvertisement(
-                              car,
-                              reason,
-                              description,
-                            );
-                          },
-                        );
-                      },
-                    ),
+                  const SizedBox(height: 8),
+                  _buildActionButton(
+                    icon: Icons.share,
+                    onPressed: () async {
+                      // Add share functionality, we have [car.shareUrl]
+                      await controller.shareCar(car.shareUrl ?? '');
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  _buildActionButton(
+                    icon: Icons.report_gmailerrorred_outlined,
+                    onPressed: () {
+                      showReportDialog(
+                        Get.context!,
+                        (reason, description) async {
+                          await advertisementController.reportAdvertisement(
+                            car,
+                            reason,
+                            description,
+                          );
+                        },
+                      );
+                    },
                   ),
                 ],
               ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-          child: Text(
-            "موديل ${car.year}",
-            style: const TextStyle(
-                fontSize: 16,
-                fontFamily: "Rubik",
-                color: AppColors.foregroundSecondary),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-          child: Text(
-            '${car.price} \$',
-            style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
-                fontFamily: "Rubik",
-                color: AppColors.foregroundPrimary),
-          ),
-        ),
+
+        // Spec icons row (full width below)
         const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
@@ -186,9 +181,7 @@ class CarDetailsScreen extends StatelessWidget {
                 IconTextPair(
                   Icons.directions_car,
                   utilitiesService.bodyTypes
-                          .firstWhere(
-                            (element) => element.key == car.bodyType,
-                          )
+                          .firstWhere((element) => element.key == car.bodyType)
                           .name
                           .ar ??
                       'غير محدد',
@@ -270,6 +263,31 @@ class CarDetailsScreen extends StatelessWidget {
           // SuggestionCars(),
           SizedBox(height: 48),
         ],
+      ),
+    );
+  }
+
+  // Extracted button widget for cleaner code
+  Widget _buildActionButton({
+    required IconData icon,
+    Color? color,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.grey.shade200,
+      ),
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        icon: Icon(
+          icon,
+          color: color ?? AppColors.foregroundSecondary,
+          size: 25,
+        ),
+        onPressed: onPressed,
       ),
     );
   }

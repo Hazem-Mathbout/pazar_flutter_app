@@ -451,7 +451,14 @@ class NewAdController extends GetxController {
         // response.data.forEach((key, value) {
         //   print('Key: $key, Value Type: ${value.runtimeType}, Value: $value');
         // });
-        final carDetailsController = Get.find<CarDetailsController>();
+        CarDetailsController carDetailsController;
+
+        if (Get.isRegistered<CarDetailsController>()) {
+          carDetailsController = Get.find<CarDetailsController>();
+        } else {
+          carDetailsController = Get.put(CarDetailsController());
+        }
+
         var newAd = Advertisement.fromJson(response.data);
         carDetailsController.updateCarInfo(newAd);
         final myAdController = Get.find<MyAdsController>();
@@ -604,8 +611,8 @@ class NewAdController extends GetxController {
       }
     }
 
-    if (numberOfSelectedImages == null || numberOfSelectedImages < 5) {
-      return 'الرجاء رفع 5 صور على الأقل.';
+    if (numberOfSelectedImages == null || numberOfSelectedImages < 1) {
+      return 'الرجاء رفع  صورة واحدة على الأقل.';
     }
 
     // Special case for model ID
