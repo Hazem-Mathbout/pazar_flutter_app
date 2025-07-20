@@ -50,7 +50,7 @@ class ImageSelector extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             const Text(
-              "قم برفع 5 صور على الأقل",
+              "قم برفع صورة واحدة على الأقل",
               style: TextStyle(
                 fontFamily: 'Rubik',
                 fontWeight: FontWeight.w400,

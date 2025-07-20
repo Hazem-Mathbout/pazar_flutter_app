@@ -9,8 +9,13 @@ import 'package:pazar/app/shared/widgets/custom_action_bottom_sheet.dart';
 
 class AdsListItem extends StatelessWidget {
   final Advertisement advertisement;
-  AdsListItem({super.key, required this.advertisement});
+  AdsListItem({
+    super.key,
+    required this.advertisement,
+    required this.index,
+  });
   final myADController = Get.find<MyAdsController>();
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -189,8 +194,10 @@ class AdsListItem extends StatelessWidget {
                               PopupMenuItem(
                                 value: 3,
                                 onTap: () async {
-                                  await myADController
-                                      .deleteAD(advertisement.id);
+                                  await myADController.deleteAD(
+                                    advertisement.id,
+                                    index,
+                                  );
                                 },
                                 child: const Row(
                                   children: [

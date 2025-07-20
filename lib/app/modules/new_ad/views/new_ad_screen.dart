@@ -32,6 +32,8 @@ class NewAdScreen extends StatelessWidget {
       controller.firstTimePopulateAdImages(advertisement!);
       controller.initFileds(advertisement!);
     }
+    var initlMake = advertisement?.make.copyWith();
+    var initModel = advertisement?.model.copyWith();
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -82,9 +84,11 @@ class NewAdScreen extends StatelessWidget {
                         // print(
                         //     "controller.selectedMakeID : ${controller.selectedMakeID}");
                         controller.clearModelFiled();
+                        initModel = null;
                       },
-                      // initialValue: controller.selectedMake,
-                      hint: controller.selectedMake,
+
+                      initialValue: initlMake,
+                      // hint: controller.selectedMake,
                     ),
                     const SizedBox(height: 16),
                     GetBuilder<NewAdController>(
@@ -116,7 +120,8 @@ class NewAdScreen extends StatelessWidget {
                                 .toLowerCase()
                                 .contains(filter.toLowerCase());
                           },
-                          hint: controller.selectedModel,
+                          // hint: controller.selectedModel,
+                          initialValue: initModel,
                         );
                       },
                     ),
@@ -323,8 +328,10 @@ class NewAdScreen extends StatelessWidget {
               ),
               Obx(
                 () => Visibility(
-                  visible:
-                      controller.imageFiles.isNotEmpty || advertisement != null,
+                  visible: controller.imageFiles.isNotEmpty ||
+                      (advertisement != null &&
+                          (controller.imageFiles.isNotEmpty ||
+                              controller.imageMedia.isNotEmpty)),
                   child: CustomContainer(
                     title: 'معاينة الصور',
                     children: [

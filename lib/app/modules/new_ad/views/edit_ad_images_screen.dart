@@ -24,8 +24,12 @@ class EditAdImagesScreen extends StatelessWidget {
       bottomNavigationBar: CustomActionBottomSheet(
         onCancel: () => Get.back(),
         onSave: () {
-          controller.saveFinalImagesEdit();
-          Get.back();
+          try {
+            controller.saveFinalImagesEdit();
+            Get.back();
+          } catch (e) {
+            Get.snackbar('خطأ', e.toString());
+          }
         },
       ),
       appBar: const CustomAppBar(

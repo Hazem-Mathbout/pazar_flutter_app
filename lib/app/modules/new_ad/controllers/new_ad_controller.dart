@@ -9,6 +9,7 @@ import 'package:pazar/app/data/models/advertisement_model.dart';
 import 'package:pazar/app/data/models/utilities_models.dart';
 import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
 import 'package:pazar/app/modules/car_details/controllers/car_details_controller.dart';
+import 'package:pazar/app/modules/cars/controllers/advertisement_controller.dart';
 import 'package:pazar/app/modules/menu/views/widgets/edit_account_info_sheet.dart';
 import 'package:pazar/app/modules/my_ads/controllers/my_ads_controller.dart';
 import 'package:pazar/app/modules/new_ad/controllers/edit_ad_images_controller.dart';
@@ -146,6 +147,8 @@ class NewAdController extends GetxController {
     // May be used to fetch models based on selected make
     selectedMakeID = ad.make.id.toString();
 
+    selectedModelID = ad.model.id.toString();
+
     // Text fields
     adNameController.text = ad.title;
     descriptionController.text = ad.description;
@@ -211,6 +214,13 @@ class NewAdController extends GetxController {
       selectedCarStatus: selectedCarStatus,
       selectedProvinc: selectedProvinc,
       numberOfSelectedImages: imageFiles.length,
+      adNameController: adNameController,
+      addressController: addressController,
+      descriptionController: descriptionController,
+      doorsController: doorsController,
+      mileageController: mileageController,
+      priceController: priceController,
+      seatsController: seatsController,
     );
 
     if (result != null) {
@@ -228,6 +238,8 @@ class NewAdController extends GetxController {
       );
       return;
     }
+
+    FocusManager.instance.primaryFocus?.unfocus();
 
     // Prepare the form data using Dio's FormData
     var data = {
@@ -310,6 +322,12 @@ class NewAdController extends GetxController {
       if (response.statusCode == 200) {
         print(await response.data);
         Get.back();
+
+        final myAdController = Get.find<MyAdsController>();
+        final advertisementController = Get.find<AdvertisementController>();
+        myAdController.refreshData();
+        advertisementController.refreshData();
+
         Get.snackbar(
           'تم النشر',
           'تم نشر الإعلان بنجاح!',
@@ -344,6 +362,10 @@ class NewAdController extends GetxController {
   // Submitting Edit ad
   Future<void> editAd(int adID) async {
     // Validate the Fields values.
+    if (selectedModelID == (-1).toString()) {
+      selectedModel = null;
+      selectedModelID = null;
+    }
     final result = await validateCarForm(
       selectedYear: selectedYear,
       selectedModel: selectedModel,
@@ -359,6 +381,13 @@ class NewAdController extends GetxController {
       selectedCarStatus: selectedCarStatus,
       selectedProvinc: selectedProvinc,
       numberOfSelectedImages: imageMedia.length,
+      adNameController: adNameController,
+      addressController: addressController,
+      descriptionController: descriptionController,
+      doorsController: doorsController,
+      mileageController: mileageController,
+      priceController: priceController,
+      seatsController: seatsController,
     );
 
     if (result != null) {
@@ -376,6 +405,8 @@ class NewAdController extends GetxController {
       );
       return;
     }
+    FocusManager.instance.primaryFocus?.unfocus();
+
     // Step 1: Prepare the raw form data (without images_ids)
     final rawFormData = {
       'title': adNameController.text,
@@ -460,6 +491,21 @@ class NewAdController extends GetxController {
         }
 
         var newAd = Advertisement.fromJson(response.data);
+        print("newAd.make: ${response.data}");
+        if (newAd.make.id == -1) {
+          // mean that the backend not return the modified make, so please
+          // populate it [HAZEM TASK].
+          newAd = newAd.copyWith(
+            make: Make(
+              id: int.tryParse(selectedMakeID ?? "-1")!,
+              name: selectedMake?.toLowerCase() ?? '',
+              label: LocalizedText(
+                ar: selectedMake ?? "",
+                en: selectedMake ?? "",
+              ),
+            ),
+          );
+        }
         carDetailsController.updateCarInfo(newAd);
         final myAdController = Get.find<MyAdsController>();
         myAdController.refreshData();
@@ -568,6 +614,11 @@ class NewAdController extends GetxController {
     super.onClose();
   }
 
+  // Helper function to clean numeric strings
+  String _cleanNumericString(String input) {
+    return input.replaceAll(',', ''); // Remove all commas
+  }
+
   /// Returns null if all required fields are valid.
   /// If `selectedModelID` is empty, it returns a warning message.
   /// If any required field is missing, it returns a custom error message.
@@ -586,7 +637,15 @@ class NewAdController extends GetxController {
     required String? selectedCarStatus,
     required String? selectedProvinc,
     required int? numberOfSelectedImages,
+    required TextEditingController adNameController,
+    required TextEditingController descriptionController,
+    required TextEditingController priceController,
+    required TextEditingController mileageController,
+    required TextEditingController addressController,
+    required TextEditingController seatsController,
+    required TextEditingController doorsController,
   }) async {
+    // Validate dropdown/selection fields
     final Map<String, String?> requiredFields = {
       'سنة الصنع': selectedYear,
       'الموديل': selectedModel,
@@ -611,8 +670,49 @@ class NewAdController extends GetxController {
       }
     }
 
+    // Validate text fields
+    final Map<String, String> textFields = {
+      'عنوان الإعلان': adNameController.text.trim(),
+      'وصف الإعلان': descriptionController.text.trim(),
+      'السعر': priceController.text.trim(),
+      'عدد الكيلومترات': mileageController.text.trim(),
+      'العنوان': addressController.text.trim(),
+      'عدد المقاعد': seatsController.text.trim(),
+      'عدد الأبواب': doorsController.text.trim(),
+    };
+
+    for (final entry in textFields.entries) {
+      if (entry.value.isEmpty) {
+        return 'الرجاء إدخال ${entry.key}';
+      }
+    }
+
+    // Validate price is a valid number (handles commas)
+    if (double.tryParse(_cleanNumericString(priceController.text.trim())) ==
+        null) {
+      return 'الرجاء إدخال سعر صحيح';
+    }
+
+    // Validate mileage is a valid number (handles commas)
+    if (double.tryParse(_cleanNumericString(mileageController.text.trim())) ==
+        null) {
+      return 'الرجاء إدخال عدد كيلومترات صحيح';
+    }
+
+    // Validate seats is a valid integer (handles commas)
+    if (int.tryParse(_cleanNumericString(seatsController.text.trim())) ==
+        null) {
+      return 'الرجاء إدخال عدد مقاعد صحيح';
+    }
+
+    // Validate doors is a valid integer (handles commas)
+    if (int.tryParse(_cleanNumericString(doorsController.text.trim())) ==
+        null) {
+      return 'الرجاء إدخال عدد أبواب صحيح';
+    }
+
     if (numberOfSelectedImages == null || numberOfSelectedImages < 1) {
-      return 'الرجاء رفع  صورة واحدة على الأقل.';
+      return 'الرجاء رفع صورة واحدة على الأقل.';
     }
 
     // Special case for model ID

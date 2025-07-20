@@ -350,6 +350,72 @@ class Advertisement {
     };
   }
 
+  Advertisement copyWith({
+    int? id,
+    String? reference,
+    String? title,
+    String? description,
+    String? price,
+    int? year,
+    String? mileage,
+    String? condition,
+    String? transmission,
+    String? fuelType,
+    String? bodyType,
+    String? seats,
+    String? doors,
+    String? interiorColor,
+    String? exteriorColor,
+    String? address,
+    String? province,
+    String? status,
+    int? viewsCount,
+    Seller? seller,
+    Make? make,
+    Make? model,
+    LocalizedText? modelFullName,
+    String? regionalSpecs,
+    List<ImageMedia>? media,
+    MetaLabels? metaLabels,
+    bool? favoritedByAuth,
+    String? shareUrl,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return Advertisement(
+      id: id ?? this.id,
+      reference: reference ?? this.reference,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      year: year ?? this.year,
+      mileage: mileage ?? this.mileage,
+      condition: condition ?? this.condition,
+      transmission: transmission ?? this.transmission,
+      fuelType: fuelType ?? this.fuelType,
+      bodyType: bodyType ?? this.bodyType,
+      seats: seats ?? this.seats,
+      doors: doors ?? this.doors,
+      interiorColor: interiorColor ?? this.interiorColor,
+      exteriorColor: exteriorColor ?? this.exteriorColor,
+      address: address ?? this.address,
+      province: province ?? this.province,
+      status: status ?? this.status,
+      viewsCount: viewsCount ?? this.viewsCount,
+      seller: seller ?? this.seller,
+      make: make ?? this.make,
+      model: model ?? this.model,
+      modelFullName: modelFullName ?? this.modelFullName,
+      regionalSpecs: regionalSpecs ?? this.regionalSpecs,
+      media: media ?? this.media,
+      metaLabels: metaLabels ?? this.metaLabels,
+      favoritedByAuth: favoritedByAuth ?? this.favoritedByAuth,
+      shareUrl: shareUrl ?? this.shareUrl,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   LocalizedText? getFuelTypeLabel(String fuelType) {
     return MetaLabelOptions.fuelTypes.firstWhere(
       (f) => f.en.toLowerCase() == fuelType.toLowerCase(),
@@ -523,6 +589,11 @@ class LocalizedText {
     return processedAr.contains(processedValue) ||
         processedEn.contains(processedValue);
   }
+
+  @override
+  String toString() {
+    return "{ar: $ar , en: $en}";
+  }
 }
 
 class MetaLabelOptions {
@@ -542,7 +613,7 @@ class MetaLabelOptions {
       LocalizedText(ar: 'ديزل', en: 'Diesel'),
       LocalizedText(ar: 'كهرباء', en: 'Electric'),
       LocalizedText(ar: 'هايبرد', en: 'Hybrid'),
-      LocalizedText(ar: 'غاز', en: 'Gas'),
+      // LocalizedText(ar: 'غاز', en: 'Gas'),
     ];
   }
 
@@ -558,7 +629,7 @@ class MetaLabelOptions {
         [
       LocalizedText(ar: 'يدوي', en: 'Manual'),
       LocalizedText(ar: 'أوتوماتيكي', en: 'Automatic'),
-      LocalizedText(ar: 'شبه أوتوماتيكي', en: 'Semi-Automatic'),
+      // LocalizedText(ar: 'شبه أوتوماتيكي', en: 'Semi-Automatic'),
     ];
   }
 

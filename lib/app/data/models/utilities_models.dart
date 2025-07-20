@@ -35,6 +35,19 @@ class Make {
     );
   }
 
+  /// Creates a new instance with updated fields (null-safe).
+  Make copyWith({
+    int? id,
+    String? name,
+    LocalizedText? label,
+  }) {
+    return Make(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      label: label ?? this.label,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -43,6 +56,11 @@ class Make {
 
   @override
   int get hashCode => id.hashCode;
+
+  @override
+  String toString() {
+    return "(id: $id, name: $name, label: $label)";
+  }
 }
 
 class ColorItem {

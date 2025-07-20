@@ -44,6 +44,7 @@ class MyAdsScreen extends GetView<MyAdsController> {
             builderDelegate: PagedChildBuilderDelegate<Advertisement>(
               itemBuilder: (context, item, index) => AdsListItem(
                 advertisement: item,
+                index: index,
               ),
               firstPageProgressIndicatorBuilder: (_) => FutureBuilder(
                 future: Future.delayed(

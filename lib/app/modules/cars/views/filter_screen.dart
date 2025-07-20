@@ -666,49 +666,54 @@ class ChipFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontFamily: 'Rubik',
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-            color: Colors.black,
+    return Container(
+      alignment: Alignment.centerRight,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontFamily: 'Rubik',
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              color: Colors.black,
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: options.map((opt) {
-              final isSelected = selectedValue == opt.ar;
-              return Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: FilterChip(
-                  label: Text(
-                    opt.ar,
-                    style: TextStyle(
-                      fontFamily: 'Rubik',
-                      fontSize: 16,
-                      color: isSelected ? Colors.white : Colors.black,
+          const SizedBox(height: 12),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: options.map((opt) {
+                final isSelected = selectedValue == opt.ar;
+                return Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: FilterChip(
+                    label: Text(
+                      opt.ar,
+                      style: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: 16,
+                        color: isSelected ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    selected: isSelected,
+                    onSelected: (_) => onSelected(opt.ar),
+                    selectedColor: AppColors.foregroundPrimary,
+                    backgroundColor: Colors.black.withOpacity(0.08),
+                    checkmarkColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  selected: isSelected,
-                  onSelected: (_) => onSelected(opt.ar),
-                  selectedColor: AppColors.foregroundPrimary,
-                  backgroundColor: Colors.black.withOpacity(0.08),
-                  checkmarkColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              );
-            }).toList(),
+                );
+              }).toList(),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -57,6 +57,7 @@ dependencies:
   flutter_html: ^3.0.0
   country_code_picker: ^3.3.0
   share_plus: ^11.0.0
+  rename_app: ^1.6.5
 
 dev_dependencies:
   flutter_test:

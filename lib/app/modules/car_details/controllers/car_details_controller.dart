@@ -34,7 +34,7 @@ class CarDetailsController extends GetxController {
   Map<String, dynamic> get carDetails {
     final car = carInfo.value;
     if (car == null) return {};
-    print("car.make.id: ${car.make.id}");
+    // print("car.make.id: ${car.make.id}");
 
     return {
       "المصنع": utilitiesService.makes

@@ -7,6 +7,7 @@ import 'package:pazar/app/core/utilities_service.dart';
 import 'package:pazar/app/data/data_layer.dart';
 import 'package:pazar/app/data/models/advertisement_model.dart';
 import 'package:pazar/app/data/models/filter_model.dart';
+import 'package:pazar/app/modules/auth/controllers/auth_controller.dart';
 import 'package:pazar/app/modules/favorites/controllers/favorites_controller.dart';
 import 'package:pazar/app/shared/utils/toast_loading.dart';
 
@@ -25,6 +26,8 @@ class AdvertisementController extends GetxController {
   final maxYearController = TextEditingController();
   final minMileageController = TextEditingController();
   final maxMileageController = TextEditingController();
+
+  final authController = Get.find<AuthController>();
 
   /// This example uses a [PagingController] to manage the paging state.
   ///
@@ -224,12 +227,21 @@ class AdvertisementController extends GetxController {
         ad.favoritedByAuth = false;
       }
 
-      Get.snackbar(
-        'خطأ',
-        'فشل حفظ الإعلان في المفضلة.',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (authController.userModel.value == null) {
+        Get.snackbar(
+          'خطأ',
+          'يرجى تسجيل الدخول لإضافة إعلان للمفضلة',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      } else {
+        Get.snackbar(
+          'خطأ',
+          'فشل حفظ الإعلان في المفضلة.',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
     }
     update(['favorite']);
   }

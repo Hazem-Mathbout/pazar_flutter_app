@@ -46,6 +46,10 @@ class EditAdImagesController extends GetxController {
   }
 
   void saveFinalImagesEdit() {
+    if (imageFiles.length + imageMedia.length <= 0) {
+      throw "يجب ان يكون للإعلان صورة واحدة على الأقل!";
+    }
+
     addController.imageFiles.value =
         imageFiles.map((element) => element).toList();
 

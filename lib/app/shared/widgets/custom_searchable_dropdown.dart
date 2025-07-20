@@ -290,11 +290,25 @@ class _CustomSearchableDropdownState<T>
     super.initState();
     _focusNode = FocusNode();
     _selectedItem = widget.initialValue;
+    print("------------------------");
     _focusNode.addListener(() {
       setState(() {
         isActive = _focusNode.hasFocus;
       });
     });
+  }
+
+  @override
+  void didUpdateWidget(CustomSearchableDropdown<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // print('Old initialValue: ${oldWidget.initialValue}');
+    // print('New initialValue: ${widget.initialValue}');
+
+    // if (widget.initialValue != oldWidget.initialValue) {
+    setState(() {
+      _selectedItem = widget.initialValue; // Sync with new initialValue
+    });
+    // }
   }
 
   @override

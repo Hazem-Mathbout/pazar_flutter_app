@@ -42,7 +42,7 @@ class MyAdsController extends GetxController {
         },
       );
 
-      log("response.data: ${response.data}");
+      // log("response.data: ${response.data}");
       if (response.statusCode == 200) {
         final List<Advertisement> newItems = List<Advertisement>.from(
           response.data['data'].map((e) => Advertisement.fromJson(e)),
@@ -97,12 +97,14 @@ class MyAdsController extends GetxController {
     pagingController.refresh();
   }
 
-  Future<void> deleteAD(int adID) async {
+  Future<void> deleteAD(int adID, int itemIndex) async {
     final cancelLoading = Toasts.showToastLoading();
+    print("itemIndex: $itemIndex");
+    print("pagingController.items: ${pagingController.items?.length}");
+
     try {
-      int? itemIndex =
-          pagingController.items?.indexWhere((element) => element.id == adID);
-      final response = await _dataLayer.delete('/advertisement/$adID');
+      final response = await _dataLayer.delete('/advertisements/$adID');
+
       if (response.statusCode == 200) {
         Get.snackbar(
           'تم الحذف',
@@ -110,11 +112,13 @@ class MyAdsController extends GetxController {
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-        if (itemIndex != -1 && itemIndex != null) {
-          pagingController.items?.removeAt(itemIndex);
-        }
+
+        refreshData();
+        // pagingController.items?.removeAt(itemIndex);
+        // pagingController.notifyListeners();
       }
-    } catch (e) {
+    } catch (e, stack) {
+      log("error: $e , stack: $stack");
       Get.snackbar(
         'خطأ',
         'فشل حذف الإعلان',

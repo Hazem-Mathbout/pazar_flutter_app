@@ -22,6 +22,7 @@ class CarDetailsScreen extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Obx(() {
         final car = controller.carInfo.value;
+        print("car make is: ${car?.make}");
         if (car == null) return const SizedBox();
 
         return Scaffold(

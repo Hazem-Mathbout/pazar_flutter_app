@@ -47,11 +47,11 @@ class AdvertisementList extends StatelessWidget {
             child: CircularProgressIndicator(),
           )),
           noItemsFoundIndicatorBuilder: (_) =>
-              const Center(child: Text("No advertisements found")),
+              const Center(child: Text("لم يتم العثور على إعلانات")),
           firstPageErrorIndicatorBuilder: (_) =>
-              const Center(child: Text("Error loading advertisements")),
+              const Center(child: Text("خطأ في تحميل الإعلانات")),
           newPageErrorIndicatorBuilder: (_) =>
-              const Center(child: Text("Failed to load more")),
+              const Center(child: Text("فشل تحميل المزيد")),
         ),
       ),
     );
